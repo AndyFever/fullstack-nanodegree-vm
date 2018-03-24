@@ -1,0 +1,17 @@
+{% extends "index.html" %}
+
+  <div class="single_article">
+
+      {% block body %}
+        <div class="title">{{ article.title}}</div>
+        <br />
+        {{ article.article_text }}
+        {% if status == True %}
+          <!-- Insert link to edit page (if logged in) using url_for -->
+          <div class="edit_options">
+            <a href='{{url_for('edit_article', article_id=article_id) }}'>Edit Article</a>
+            <a href='{{url_for('delete_article', article_id=article_id) }}'>Delete Article</a>
+          </div>
+          {% endif %}
+      {% endblock %}
+  </div>

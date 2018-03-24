@@ -1,0 +1,32 @@
+{% extends "index.html" %}
+  {% block body %}
+  <div class="selection_block">
+    <span class="items">
+      <div>
+        <p class="header_text">Categories</p>
+          {% for item in categories %}
+          <div class="category">
+
+            <div class="title">
+              <a href='{{url_for('articles_by_catagory',
+              catalog_id = item.id) }}'>{{ item.categories }}</a>
+            </div>
+            <br />
+          </div>
+          {% endfor %}
+      </div>
+    </span>
+    <span class="articles">
+      <div>
+        <p class="header_text">{{catagory.category}} Items ({{count}} items)</p>
+      </div>
+      {% for item in results %}
+        <div class="article">
+          <div class="article_title">
+            <a href='{{url_for('article', article_id = item.id) }}'>{{ item.title }}</a>
+          </div>
+        </div>
+      {% endfor %}
+    </span>
+  </div>
+  {% endblock %}
