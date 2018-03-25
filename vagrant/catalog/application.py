@@ -1,5 +1,5 @@
 from models import Base, User, Article, Category
-from flask import Flask, jsonify, request, render_template, abort, redirect
+from flask import Flask, jsonify, request, render_template, abort, redirect, g
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, sessionmaker
 from sqlalchemy import create_engine
@@ -56,26 +56,34 @@ def catalog_json():
     categories = session.query(Category).all()
     return jsonify(categories)
 
-@app.route('/new_user')
+@app.route('/new_user', methods=['GET', 'POST'])
 def create_user():
     """Allows the creation of a new user"""
+
     if request.method == "POST":
         username = request.form['username']
         password = request.form['password']
+        user = session.query(User).first()
 
-        # Check the user doesn't exist in the database
-        if session.query(User).filter_by(username=username).first():
-            # The user exists, abort the action
-            # TODO Add an error page for the problematic user request
-            abort(400)
-        else:
-            hashed_pwd = hash_password(password)
-            user = User(username, hashed_pwd)
-            session.add(user)
-            session.commit()
-            #  TODO Can we put a flash message here
-            return redirect('/', code=302)
+        # The user exists, abort the action
+        # TODO Add an error page for the problematic user request
 
+        add_user(username, password)
+        #  TODO Can we put a flash message here
+        return redirect('/', code=302)
+    else:
+        # Display the new user form
+        return render_template('new_user.html')
+
+def add_user(username, password):
+    # Check the user doesn't exist in the database
+    if session.query(User).filter_by(username=username).first():
+        return False
+    else:
+        user = User(username = username)
+        user.hash_password(password)
+        session.add(user)
+        session.commit()
 
 if __name__ == '__main__':
     app.debug = True
