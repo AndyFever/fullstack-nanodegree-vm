@@ -47,11 +47,6 @@ class User(Base):
         print('user id: {}'.format(user_id))
         return user_id
 
-    @classmethod
-    def user_logged_in(token):
-        return True
-
-
     @property
     def serialize(self):
         return {'id': self.id,

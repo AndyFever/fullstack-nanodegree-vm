@@ -1,9 +1,10 @@
 from models import Base, User, Article, Category
 from flask import Flask, jsonify, request, render_template, abort, redirect, g
+from flask_httpauth import HTTPBasicAuth
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, sessionmaker
 from sqlalchemy import create_engine
-
+auth = HTTPBasicAuth()
 engine = create_engine('sqlite:///catalog.db')
 
 Base.metadata.bind = engine
@@ -51,6 +52,7 @@ def show_article(catalog_id, article_id):
 
 
 @app.route('/catalog.json')
+@auth.login_required
 def catalog_json():
     """Return all of the catalog in json form - should be logged in"""
     # TODO Remove default status of true once login func completed
@@ -59,8 +61,9 @@ def catalog_json():
 
 
 @app.route('/users.json')
+@auth.login_required
 def users_json():
-    """Return all of the catalog in json form - should be logged in"""
+    """Return all of the users in json form - should be logged in"""
     # TODO Remove default status of true once login func completed
     users = session.query(User).all()
     return jsonify(User=[i.serialize for i in users])
@@ -68,6 +71,7 @@ def users_json():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    """Allow users to login to the website"""
     if request.method == "POST":
         username = request.form['username']
         password = request.form['password']
@@ -80,6 +84,7 @@ def login():
             if result:
                 print('User {} has been succesfully validated - result: {}'.format(user.username, result))
                 # Set the session variable to a logged in state
+                g.user = user
             return redirect('/', code=302)
         else:
             # User doesn't exist flash error message
@@ -88,6 +93,7 @@ def login():
     else:
         # Display the login page
         return render_template('login.html')
+
 
 @app.route('/new_user', methods=['GET', 'POST'])
 def create_user():
@@ -104,6 +110,27 @@ def create_user():
     else:
         # Display the new user form
         return render_template('new_user.html')
+
+
+@app.route('/token')
+@auth.login_required
+def get_auth_token():
+    token = g.user.generate_auth_token()
+    return redirect('/', code=302)
+
+
+@auth.verify_password
+def verify_password(username_or_token, password):
+    #Try to see if it's a token first
+    user_id = User.verify_auth_token(username_or_token)
+    if user_id:
+        user = session.query(User).filter_by(id = user_id).one()
+    else:
+        user = session.query(User).filter_by(username = username_or_token).first()
+        if not user or not user.verify_password(password):
+            return False
+    g.user = user
+    return True
 
 
 def add_user(username, password):
