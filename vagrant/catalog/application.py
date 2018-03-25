@@ -49,31 +49,39 @@ def show_article(catalog_id, article_id):
      article=article,
      status=True,)
 
+
 @app.route('/catalog.json')
 def catalog_json():
     """Return all of the catalog in json form - should be logged in"""
     # TODO Remove default status of true once login func completed
-    categories = session.query(Category).all()
-    return jsonify(categories)
+    all_categories = session.query(Category).all()
+    return jsonify(Category=[i.serialize for i in all_categories])
+
+
+@app.route('/users.json')
+def users_json():
+    """Return all of the catalog in json form - should be logged in"""
+    # TODO Remove default status of true once login func completed
+    users = session.query(User).all()
+    return jsonify(User=[i.serialize for i in users])
+
 
 @app.route('/new_user', methods=['GET', 'POST'])
 def create_user():
     """Allows the creation of a new user"""
-
     if request.method == "POST":
         username = request.form['username']
         password = request.form['password']
         user = session.query(User).first()
-
         # The user exists, abort the action
         # TODO Add an error page for the problematic user request
-
         add_user(username, password)
         #  TODO Can we put a flash message here
         return redirect('/', code=302)
     else:
         # Display the new user form
         return render_template('new_user.html')
+
 
 def add_user(username, password):
     # Check the user doesn't exist in the database
@@ -84,6 +92,7 @@ def add_user(username, password):
         user.hash_password(password)
         session.add(user)
         session.commit()
+
 
 if __name__ == '__main__':
     app.debug = True
