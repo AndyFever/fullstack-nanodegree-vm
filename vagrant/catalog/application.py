@@ -21,7 +21,7 @@ def show_homepage():
     return render_template('homepage.html',
      categories=categories,
      articles=articles,
-     status=True,)
+     status=False,)
 
 
 @app.route('/catalog/<int:catalog_id>/items')
@@ -65,6 +65,29 @@ def users_json():
     users = session.query(User).all()
     return jsonify(User=[i.serialize for i in users])
 
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == "POST":
+        username = request.form['username']
+        password = request.form['password']
+
+        # Check the username and password
+        if session.query(User).filter_by(username=username).first():
+            # User exists, check the password
+            user = session.query(User).filter_by(username=username).first()
+            result = user.verify_password(password)
+            if result:
+                print('User {} has been succesfully validated - result: {}'.format(user.username, result))
+                # Set the session variable to a logged in state
+            return redirect('/', code=302)
+        else:
+            # User doesn't exist flash error message
+            print('User - {}, unsucceful login attempt'.format(user.username))
+            return redirect('/', code=302)
+    else:
+        # Display the login page
+        return render_template('login.html')
 
 @app.route('/new_user', methods=['GET', 'POST'])
 def create_user():
