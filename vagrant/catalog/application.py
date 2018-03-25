@@ -31,7 +31,6 @@ def show_articles_by_category(catalog_id):
     categories = session.query(Category).all()
     category = session.query(Category).filter_by(id=catalog_id)
     articles = session.query(Article).filter_by(parent_id=catalog_id)
-
     # TODO Return all the data - status is set to True until login is done
     return render_template('articles_by_category.html',
      category=category,
@@ -60,7 +59,7 @@ def catalog_json():
 @app.route('/new_user')
 def create_user():
     """Allows the creation of a new user"""
-    if request.method = "POST":
+    if request.method == "POST":
         username = request.form['username']
         password = request.form['password']
 
@@ -71,7 +70,7 @@ def create_user():
             abort(400)
         else:
             hashed_pwd = hash_password(password)
-            user = User(username=username, hashed_pwd)
+            user = User(username, hashed_pwd)
             session.add(user)
             session.commit()
             #  TODO Can we put a flash message here
