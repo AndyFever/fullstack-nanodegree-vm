@@ -31,7 +31,7 @@ def show_homepage():
     """Displays all the categories and the first ten articles"""
     categories = session.query(Category).all()
     articles = session.query(Article).limit(10)
-
+    status = is_authenticated()
     return render_template('homepage.html',
      categories=categories,
      articles=articles,
@@ -56,12 +56,15 @@ def show_articles_by_category(catalog_id):
 @app.route('/catalog/<int:catalog_id>/<int:article_id>')
 def show_article(catalog_id, article_id):
     """Displays a specific article - if logged in you can edit the article"""
+
     # Get the details of the article to be displayed
     article = session.query(Article).filter_by(id=article_id).first()
+
     # TODO Return status of true until login completed, then remove
     return render_template('article.html',
      article=article,
      status=True,)
+
 
 @app.route('/catalog/<int:article_id>/edit', methods=['GET', 'POST'])
 def edit_article(article_id):
@@ -200,6 +203,7 @@ def create_user():
 @auth.login_required
 def get_auth_token():
     token = g.user.generate_auth_token()
+
     return redirect('/', code=302)
 
 
@@ -214,6 +218,7 @@ def verify_password(username_or_token, password):
         if not user or not user.verify_password(password):
             return False
     g.user = user
+    login_session['authenicated?'] = True
     return True
 
 
@@ -288,6 +293,7 @@ def gconnect():
     # Store the access token in the session for later use.
     login_session['access_token'] = credentials.access_token
     login_session['gplus_id'] = gplus_id
+    login_session['authenicated?'] = True
 
     # Get user info
     userinfo_url = "https://www.googleapis.com/oauth2/v1/userinfo"
@@ -310,6 +316,17 @@ def gconnect():
     flash("you are now logged in as %s" % login_session['username'])
     print "done!"
     return output
+
+def is_authenticated():
+    try:
+        if login_session['authenicated?']:
+            return True
+    except KeyError:
+        # Key doesn't exist yet
+        login_session['authenicated?'] = False
+        return False
+    else:
+        return False
 
 if __name__ == '__main__':
     app.debug = True
