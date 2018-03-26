@@ -63,14 +63,38 @@ def show_article(catalog_id, article_id):
      article=article,
      status=True,)
 
-@app.route('/catalog/<int:article_id>/edit')
+@app.route('/catalog/<int:article_id>/edit', methods=['GET', 'POST'])
 def edit_article(article_id):
     article = session.query(Article).filter_by(id=article_id).first()
     categories = session.query(Category).filter_by(id=article.parent_id)
-    print('Article: {}'.format(article.parent_id))
-    return render_template('edit_article.html',
-     categories=categories,
-     article=article,)
+
+    if request.method=='GET':
+        return render_template('edit_article.html',
+         categories=categories,
+         article=article,)
+    elif request.method=='POST':
+        title = request.form['title']
+        description = request.form['description']
+        category = request.form['category']
+        print(category)
+
+        # Update any records that have been returned
+        if title:
+            article.title = title
+        if description:
+            article.article_text = description
+        if category:
+            article.parent_id = category
+        # Add and commit the record
+        session.add(article)
+        session.commit()
+        flash ('Article has been amended')
+        return redirect('/', code=302)
+
+
+@app.route('/catalog/<int:article_id>/delete')
+def delete_article(article_id):
+    pass
 
 
 @app.route('/catalog.json')
