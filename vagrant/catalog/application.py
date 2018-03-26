@@ -57,11 +57,20 @@ def show_articles_by_category(catalog_id):
 def show_article(catalog_id, article_id):
     """Displays a specific article - if logged in you can edit the article"""
     # Get the details of the article to be displayed
-    article = session.query(Article).filter_by(id=article_id)
+    article = session.query(Article).filter_by(id=article_id).first()
     # TODO Return status of true until login completed, then remove
     return render_template('article.html',
      article=article,
      status=True,)
+
+@app.route('/catalog/<int:article_id>/edit')
+def edit_article(article_id):
+    article = session.query(Article).filter_by(id=article_id).first()
+    categories = session.query(Category).filter_by(id=article.parent_id)
+    print('Article: {}'.format(article.parent_id))
+    return render_template('edit_article.html',
+     categories=categories,
+     article=article,)
 
 
 @app.route('/catalog.json')
