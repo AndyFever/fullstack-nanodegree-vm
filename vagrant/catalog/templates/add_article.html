@@ -1,11 +1,11 @@
 {% extends "index.html" %}
 {% block body %}
-  Edit Article
+Add Article
   <form method="POST">
     Title:<br />
-    <input type="text" name="title" placeholder="{{article.title}}" /><br />
+    <input type="text" name="title" /><br />
     Description:<br />
-    <input type="text" name="description" placeholder="{{article.article_text}}"/><br />
+    <input type="text" name="description" /><br />
     Categegory:<br />
     <select name="category">
       {% for item in categories %}

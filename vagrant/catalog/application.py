@@ -66,6 +66,7 @@ def show_article(catalog_id, article_id):
 @app.route('/catalog/<int:article_id>/edit', methods=['GET', 'POST'])
 def edit_article(article_id):
     article = session.query(Article).filter_by(id=article_id).first()
+    # Below may be wrong and why only one cat is brought back
     categories = session.query(Category).filter_by(id=article.parent_id)
 
     if request.method=='GET':
@@ -88,6 +89,31 @@ def edit_article(article_id):
         session.add(article)
         session.commit()
         flash ('Article has been amended')
+        return redirect('/', code=302)
+
+
+@app.route('/catalog/add_article', methods=['GET', 'POST'])
+def add_article():
+    """Allows the user to create and save an article"""
+    if request.method=='GET':
+        #  Get the list of categories so the user can select
+        categories = session.query(Category).all()
+        # Display the add_article page
+        return render_template('add_article.html', categories=categories)
+    elif request.method=='POST':
+        # Get the request info and add the new request to the database
+        title = request.form['title']
+        description = request.form['description']
+        category = request.form['category']
+
+        # TODO Update the owner once login functionality is complete
+        new_article= Article(title=title,
+            article_text=description,
+            parent_id=category,
+            owner='admin')
+        session.add(new_article)
+        session.commit()
+        flash('Record created')
         return redirect('/', code=302)
 
 
