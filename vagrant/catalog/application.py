@@ -57,7 +57,6 @@ def show_articles_by_category(catalog_id):
 @app.route('/catalog/<int:catalog_id>/<int:article_id>')
 def show_article(catalog_id, article_id):
     """Displays a specific article - if logged in you can edit the article"""
-
     # Get the details of the article to be displayed
     article = session.query(Article).filter_by(id=article_id).first()
     status = is_authenticated()
