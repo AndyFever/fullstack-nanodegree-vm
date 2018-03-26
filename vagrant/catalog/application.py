@@ -76,7 +76,6 @@ def edit_article(article_id):
         title = request.form['title']
         description = request.form['description']
         category = request.form['category']
-        print(category)
 
         # Update any records that have been returned
         if title:
@@ -92,9 +91,19 @@ def edit_article(article_id):
         return redirect('/', code=302)
 
 
-@app.route('/catalog/<int:article_id>/delete')
+@app.route('/catalog/<int:article_id>/delete', methods=['GET', 'POST'])
 def delete_article(article_id):
-    pass
+    """Allows the user to delete an article"""
+    if request.method=='GET':
+        # Display the delete article page
+        return render_template('delete_article.html')
+    elif request.method=='POST':
+        # Delete the specified article
+        delete_article = session.query(Article).filter_by(id=article_id).first()
+        session.delete(delete_article)
+        session.commit()
+        flash('Article deleted')
+        return redirect('/', code=302)
 
 
 @app.route('/catalog.json')
