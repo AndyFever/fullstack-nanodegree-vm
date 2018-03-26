@@ -35,7 +35,7 @@ def show_homepage():
     return render_template('homepage.html',
      categories=categories,
      articles=articles,
-     status=False,)
+     status=status,)
 
 
 @app.route('/catalog/<int:catalog_id>/items')
@@ -45,12 +45,13 @@ def show_articles_by_category(catalog_id):
     categories = session.query(Category).all()
     category = session.query(Category).filter_by(id=catalog_id)
     articles = session.query(Article).filter_by(parent_id=catalog_id)
+    status = is_authenticated()
     # TODO Return all the data - status is set to True until login is done
     return render_template('articles_by_category.html',
      category=category,
      categories=categories,
      articles=articles,
-     status=True,)
+     status=status,)
 
 
 @app.route('/catalog/<int:catalog_id>/<int:article_id>')
@@ -59,11 +60,11 @@ def show_article(catalog_id, article_id):
 
     # Get the details of the article to be displayed
     article = session.query(Article).filter_by(id=article_id).first()
-
+    status = is_authenticated()
     # TODO Return status of true until login completed, then remove
     return render_template('article.html',
      article=article,
-     status=True,)
+     status=status,)
 
 
 @app.route('/catalog/<int:article_id>/edit', methods=['GET', 'POST'])
@@ -183,6 +184,7 @@ def login():
 
 
 @app.route('/new_user', methods=['GET', 'POST'])
+@auth.login_required
 def create_user():
     """Allows the creation of a new user"""
     if request.method == "POST":
