@@ -30,6 +30,13 @@
           </div>
         </div>
       {% endfor %}
+      <span>
+        <br />
+        Recently Viewed Articles <br /><br />
+        {% for h in history %}
+        {{ h.article.title }} was {{ h.action }} by {{h.viewer}} <br /><br />
+        {% endfor %}
+      </span>
     </span>
   </div>
 {% endblock %}

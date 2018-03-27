@@ -1,4 +1,4 @@
-from models import Base, User, Article, Category
+from models import Base, User, Article, Category, History
 from flask import Flask, jsonify, request, render_template, abort, redirect, g, flash
 from flask_httpauth import HTTPBasicAuth
 from sqlalchemy.ext.declarative import declarative_base
@@ -32,9 +32,14 @@ def show_homepage():
     categories = session.query(Category).all()
     articles = session.query(Article).limit(10)
     status = is_authenticated()
+
+    # Load the last three records from History
+    history = session.query(History).filter_by(viewer=login_session['username']).all()
+    history.reverse() # Get the most recent record first
     return render_template('homepage.html',
      categories=categories,
      articles=articles,
+     history=history,
      status=status,)
 
 
@@ -60,7 +65,16 @@ def show_article(catalog_id, article_id):
     # Get the details of the article to be displayed
     article = session.query(Article).filter_by(id=article_id).first()
     status = is_authenticated()
-    # TODO Return status of true until login completed, then remove
+    # Add the viewing history to the database if the user is logged in
+    if status:
+        username =  login_session['username']
+        record = History(viewer=username,
+        action='viewed',
+        viewed_article=article_id)
+        print('Adding record')
+        session.add(record)
+        session.commit()
+
     return render_template('article.html',
      article=article,
      status=status,)
@@ -91,6 +105,15 @@ def edit_article(article_id):
         # Add and commit the record
         session.add(article)
         session.commit()
+
+        # Update the history for the article
+        username =  login_session['username']
+        record = History(viewer=username,
+        action='edited',
+        viewed_article=article_id)
+        print('Adding record')
+        session.add(record)
+        session.commit()
         flash ('Article has been amended')
         return redirect('/', code=302)
 
@@ -110,7 +133,7 @@ def add_article():
         category = request.form['category']
 
         # TODO Update the owner once login functionality is complete
-        new_article= Article(title=title,
+        new_article = Article(title=title,
             article_text=description,
             parent_id=category,
             owner='admin')

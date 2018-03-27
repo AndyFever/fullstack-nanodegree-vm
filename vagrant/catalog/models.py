@@ -85,5 +85,14 @@ class Article(Base):
         }
 
 
+class History(Base):
+    __tablename__ = 'history'
+    id = Column(Integer, primary_key=True)
+    viewer = Column(String, nullable=False)
+    action = Column(String, nullable=False)
+    viewed_article = Column(Integer, ForeignKey('article.id'))
+    article = relationship("Article")
+
+
 engine = create_engine('sqlite:///catalog.db')
 Base.metadata.create_all(engine)
