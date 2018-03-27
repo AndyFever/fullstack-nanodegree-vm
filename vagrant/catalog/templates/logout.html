@@ -1,0 +1,9 @@
+{% extends "index.html" %}
+  {% block body %}
+  <br /><br />
+    Are you sure you want to logout or go <a href='{{url_for('show_homepage')}}'>back to home?</a>
+    <br /><br />
+    <form method='POST'>
+      <input type="submit" value="Submit">
+    </form>
+  {% endblock %}

@@ -206,7 +206,6 @@ def login():
 
 
 @app.route('/new_user', methods=['GET', 'POST'])
-@auth.login_required
 def create_user():
     """Allows the creation of a new user"""
     if request.method == "POST":
@@ -247,6 +246,7 @@ def verify_password(username_or_token, password):
 
 
 def add_user(username, password):
+    """Allows the current user to create an account"""
     # Check the user doesn't exist in the database
     if session.query(User).filter_by(username=username).first():
         return False
@@ -341,7 +341,25 @@ def gconnect():
     print "done!"
     return output
 
+
+@app.route('/logout', methods=['GET', 'POST'])
+def logout():
+    """Logs the current user out of the application"""
+    if request.method=='GET':
+        # Display the logout page
+        return render_template('logout.html')
+
+    elif request.method=='POST':
+        # Log the current user out
+        print('Loging the user out')
+        log_user_out()
+        status = is_authenticated()
+        print('Is the user loged in? {}'.format(status))
+        return 'Logged out'
+
+
 def is_authenticated():
+    """Determines if a user is currently logged into the application"""
     try:
         if login_session['authenicated?']:
             return True
@@ -351,6 +369,13 @@ def is_authenticated():
         return False
     else:
         return False
+
+def log_user_out():
+    """Logs the current user out"""
+    login_session['authenicated?'] = False
+    login_session['username'] = None
+    login_session['gplus_id'] = None
+    g.user = None
 
 if __name__ == '__main__':
     app.debug = True
