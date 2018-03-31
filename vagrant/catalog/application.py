@@ -34,6 +34,7 @@ def show_homepage():
     status = is_authenticated()
 
     # Load the last three records from History
+    # TODO Bug here when loging in for the first time. Don't display if status if false
     history = session.query(History).filter_by(viewer=login_session['username']).all()
     history.reverse() # Get the most recent record first
     return render_template('homepage.html',

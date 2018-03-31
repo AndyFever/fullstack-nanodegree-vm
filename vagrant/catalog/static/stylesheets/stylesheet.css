@@ -1,0 +1,82 @@
+.site {
+  display: grid;
+  background: white;
+  grid-template-columns: 10em 1fr 1fr 1fr 10em;
+  grid-template-rows: 200px auto auto 1fr;
+  grid-gap: 0.5em;
+  font-family: 'Amaranth';
+  grid-template-areas:
+    ". header header login ."
+    ". description description description ."
+    ". categorys article preview ."
+    ". recent_activity recent_activity recent_activity ."
+}
+
+.header {
+  display: grid;
+  background: #4ABDAC;
+  padding: 50px;
+  font-family: 'Alfa Slab One';
+  font-size: 65px;
+  grid-area: header;
+}
+
+.login{
+  display: grid;
+  background: #4ABDAC;
+
+  font-size: 24px;
+  padding: 50px;
+  grid-area: login;
+}
+
+.description {
+  display: grid;
+  grid-area: description;
+  background: #4ABDAC;
+  font-family: 'Amaranth';
+  font-size: 20px;
+  padding: 40px;
+}
+
+.categorys {
+  display: grid;
+  grid-area: categorys;
+  padding: 40px;
+  background: #4ABDAC;
+}
+
+.article {
+  display: grid;
+  grid-area: article;
+  padding: 40px;
+  background: #4ABDAC;
+}
+
+.preview {
+  display: grid;
+  grid-area: preview;
+  padding: 40px;
+  background: #4ABDAC;
+}
+
+.catalog {
+  display: grid;
+  grid-area: catalog;
+  padding: 40px;
+}
+
+.articles {
+  display: grid;
+  grid-area: articles;
+  padding: 40px;
+}
+
+.recent_activity {
+  display: grid;
+  grid-area: recent_activity;
+  padding-right: 40px;
+  padding-top: 20px;
+  background: #4ABDAC;
+
+}

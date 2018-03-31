@@ -1,20 +1,20 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Product Catalog App</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href='https://fonts.googleapis.com/css?family=Ubuntu' rel='stylesheet'>
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>TestingBOK</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='stylesheets/stylesheet.css') }}" />
+    <link href='https://fonts.googleapis.com/css?family=Alfa Slab One' rel='stylesheet'>
+    <link href='https://fonts.googleapis.com/css?family=Amaranth' rel='stylesheet'>
 
 </head>
 <body>
   <div class="site">
-    <div class="navbar">
-      <div>Product Catalog App</div>
-      <!-- Link to the homepage -->
-      <div><a href='{{url_for('show_homepage') }}'>Home</a></div>
-      <!-- Link to create new user - TODO only show if not logged in -->
-      <div><a href='{{url_for('create_user') }}'>Create Account</a></div>
+      <div class="header">
+        <div>Product Catalog App</div>
+      </div>
+      <div class="login">
         {% if status == True: %}
           <div class="logged_in">
             <!-- Logout button  -->
@@ -24,14 +24,22 @@
           <!-- Logout button -->
           <a href="{{url_for('login')}}" class="buttons">Login</a>
         {% endif %}
-        <div><a href='{{url_for('add_article') }}'>Add an article...</a></div>
-    </div>
+      </div>
+      <!-- Link to the homepage -->
+      <div><a href='{{url_for('show_homepage') }}'>Home</a></div>
+      <!-- Link to create new user - TODO only show if not logged in -->
+      <div><a href='{{url_for('create_user') }}'>Create Account</a></div>
 
-    <span class="main_content">
-      {% block body %}{% endblock %}
+        <div></div>
+
+    <span class="description">
+      TestingBoK is a online community resource for cataloguing tools, techniques, processes
+      and useful articles related to modern software testing.
+
+      Once you have logged in, you can create a new article</a>
+      and later edit anyarticles you have created.
     </span>
-
-
+      {% block body %}{% endblock %}
   </div>
 
 

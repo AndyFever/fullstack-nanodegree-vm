@@ -1,11 +1,10 @@
 {% extends "index.html" %}
   {% block body %}
-  <div class="selection_block">
-    <span class="items">
+    <span class="categorys">
       <div>
         <p class="header_text">Categories</p>
           {% for item in categories %}
-          <div class="categorys">
+          <div class="all_categorys">
             <div class="title">
               <a href='{{url_for('show_articles_by_category',
               catalog_id = item.id) }}'>{{ item.category }}</a>
@@ -14,12 +13,12 @@
           {% endfor %}
       </div>
     </span>
-    <span class="articles">
+    <span class="article">
       <div>
         <p class="header_text">Latest Articles</p>
       </div>
       {% for item in articles %}
-        <div class="article">
+        <div class="all_articles">
           <div class="article_title">
             <a href='{{url_for('show_article', catalog_id = item.parent_id, article_id = item.id) }}'>{{ item.title }}</a>
             {% for category in categories %}
@@ -30,13 +29,12 @@
           </div>
         </div>
       {% endfor %}
-      <span>
-        <br />
-        Recently Viewed Articles <br /><br />
-        {% for h in history %}
-        {{ h.article.title }} was {{ h.action }} by {{h.viewer}} <br /><br />
-        {% endfor %}
-      </span>
     </span>
-  </div>
+    <span class="recent_activity">
+      <br />
+      Recently Viewed Articles <br /><br />
+      {% for h in history %}
+      {{ h.article.title }} was {{ h.action }} by {{h.viewer}} <br /><br />
+      {% endfor %}
+    </span>
 {% endblock %}
