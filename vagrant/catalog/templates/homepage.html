@@ -4,12 +4,10 @@
       <div>
         <p class="header_text">Categories</p>
           {% for item in categories %}
-          <div class="all_categorys">
-            <div class="title">
+            <div class="catalog_title">
               <a href='{{url_for('show_articles_by_category',
               catalog_id = item.id) }}'>{{ item.category }}</a>
             </div>
-          </div>
           {% endfor %}
       </div>
     </span>

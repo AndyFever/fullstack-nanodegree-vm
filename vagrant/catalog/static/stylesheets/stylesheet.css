@@ -88,3 +88,11 @@
   /* CSS for text elements on the homepage */
   padding-left: 25px;
 }
+
+.article_title {
+  padding-bottom: 5px;
+}
+
+.catalog_title {
+  padding-bottom: 5px;
+}
