@@ -32,9 +32,18 @@
     </span>
     <span class="recent_activity">
       <br />
-      Recently Viewed Articles <br /><br />
-      {% for h in history %}
-      {{ h.article.title }} was {{ h.action }} by {{h.viewer}} <br /><br />
-      {% endfor %}
+      <div class="heading">
+        Recently Viewed Articles: <br /><br />
+      </div>
+      {% if status == True %}
+        <div class='text'>
+          {% for h in history %}
+                {{ h.article.title }} was {{ h.action }} by {{h.viewer}} <br /><br />
+          {% endfor %}
+        </div>
+        {% elif status == False %}
+          <p class="text">Please login to see your history</p>
+      {% endif %}
+
     </span>
 {% endblock %}

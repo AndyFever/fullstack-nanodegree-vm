@@ -75,8 +75,16 @@
 .recent_activity {
   display: grid;
   grid-area: recent_activity;
-  padding-right: 40px;
   padding-top: 20px;
   background: #4ABDAC;
+}
 
+.heading {
+  /* CSS for headings on the homepage */
+  padding-left: 20px;
+}
+
+.text {
+  /* CSS for text elements on the homepage */
+  padding-left: 25px;
 }
