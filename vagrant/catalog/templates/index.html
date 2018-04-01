@@ -12,25 +12,21 @@
 <body>
   <div class="site">
       <div class="header">
-        <div>Product Catalog App</div>
+        <div>TestingBoK: A QA Catalog</div>
+        <!-- Link to the homepage -->
+        <div class="header_text">
+          <a href='{{url_for('show_homepage') }}'>Home</a>
+          {% if status == True: %}
+              <!-- Logout button  -->
+               <a href="/logout" class="buttons" onclick="sign_out();">Logout</a>
+          {% elif status == False: %}
+            <!-- Link to create new user - TODO only show if not logged in -->
+            <a href='{{url_for('create_user') }}'>Create Account</a>
+            <!-- Logout button -->
+            <a href="{{url_for('login')}}" class="buttons">Login</a>
+          {% endif %}
+        </div>
       </div>
-      <div class="login">
-        {% if status == True: %}
-          <div class="logged_in">
-            <!-- Logout button  -->
-             <a href="/logout" class="buttons" onclick="sign_out();">Logout</a>
-          </div>
-        {% elif status == False: %}
-          <!-- Logout button -->
-          <a href="{{url_for('login')}}" class="buttons">Login</a>
-        {% endif %}
-      </div>
-      <!-- Link to the homepage -->
-      <div><a href='{{url_for('show_homepage') }}'>Home</a></div>
-      <!-- Link to create new user - TODO only show if not logged in -->
-      <div><a href='{{url_for('create_user') }}'>Create Account</a></div>
-
-        <div></div>
 
     <span class="description">
       TestingBoK is a online community resource for cataloguing tools, techniques, processes

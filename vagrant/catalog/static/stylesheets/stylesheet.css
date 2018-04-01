@@ -24,7 +24,6 @@
 .login{
   display: grid;
   background: #4ABDAC;
-
   font-size: 24px;
   padding: 50px;
   grid-area: login;
@@ -95,4 +94,17 @@
 
 .catalog_title {
   padding-bottom: 5px;
+}
+
+.header_text {
+  font-family: 'Amaranth';
+  font-size: 25px;
+}
+
+.align_center {
+  align-items: center;
+}
+
+.align_right {
+
 }
