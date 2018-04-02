@@ -355,8 +355,7 @@ def logout():
         print('Loging the user out')
         log_user_out()
         status = is_authenticated()
-        print('Is the user loged in? {}'.format(status))
-        return 'Logged out'
+        return redirect('/', code=302)
 
 
 def is_authenticated():
