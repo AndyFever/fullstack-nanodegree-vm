@@ -4,9 +4,9 @@
   grid-template-columns: 10em 1fr 1fr 1fr 10em;
   grid-template-rows: 200px auto auto 1fr;
   grid-gap: 0.5em;
-  font-family: 'Amaranth';
   grid-template-areas:
     ". header header login ."
+    ". navbar_one navbar_two navbar_three ."
     ". description description description ."
     ". categorys article preview ."
     ". recent_activity recent_activity recent_activity ."
@@ -21,11 +21,32 @@
   grid-area: header;
 }
 
+.navbar_one {
+  display: grid;
+  grid-area: navbar_one;
+  background: #F78733;
+  text-align: center;
+}
+
+.navbar_two {
+  display: grid;
+  grid-area: navbar_two;
+  background: #F78733;
+  text-align: center;
+}
+
+.navbar_three {
+  display: grid;
+  grid-area: navbar_three;
+  background: #F78733;
+  text-align: center;
+}
+
 .login{
   display: grid;
   background: #4ABDAC;
   font-size: 24px;
-  padding: 50px;
+  padding: 40px;
   grid-area: login;
 }
 
@@ -33,15 +54,16 @@
   display: grid;
   grid-area: description;
   background: #4ABDAC;
-  font-family: 'Amaranth';
-  font-size: 20px;
-  padding: 40px;
+  font-family: 'Alfa Slab One';
+  font-size: 22px;
+  padding: 20px;
 }
 
 .categorys {
   display: grid;
   grid-area: categorys;
   padding: 40px;
+  font-size: 22px;
   background: #4ABDAC;
 }
 
@@ -49,6 +71,7 @@
   display: grid;
   grid-area: article;
   padding: 40px;
+  font-size: 22px;
   background: #4ABDAC;
 }
 
@@ -62,12 +85,14 @@
 .catalog {
   display: grid;
   grid-area: catalog;
+  font-family: 'Amaranth';
   padding: 40px;
 }
 
 .articles {
   display: grid;
   grid-area: articles;
+  font-family: 'Amaranth';
   padding: 40px;
 }
 
@@ -76,6 +101,8 @@
   grid-area: recent_activity;
   padding-top: 20px;
   background: #4ABDAC;
+  font-family: 'Amaranth';
+  font-size: 20px;
 }
 
 .heading {
@@ -102,9 +129,10 @@
 }
 
 .align_center {
-  align-items: center;
+  text-align: center;
 }
 
 .align_right {
+  text-align: right;
 
 }

@@ -15,17 +15,39 @@
         <div>TestingBoK: A QA Catalog</div>
         <!-- Link to the homepage -->
         <div class="header_text">
-          <a href='{{url_for('show_homepage') }}'>Home</a>
-          {% if status == True: %}
-              <!-- Logout button  -->
-               <a href="/logout" class="buttons" onclick="sign_out();">Logout</a>
-          {% elif status == False: %}
-            <!-- Link to create new user - TODO only show if not logged in -->
-            <a href='{{url_for('create_user') }}'>Create Account</a>
-            <!-- Logout button -->
-            <a href="{{url_for('login')}}" class="buttons">Login</a>
-          {% endif %}
+
+
         </div>
+      </div>
+
+      <div class="navbar_one header_text">
+        <a href='{{url_for('show_homepage') }}'>Home</a>
+      </div>
+      <div class="navbar_two header_text">
+        {% if status == True: %}
+            <!-- Logout button  -->
+             <a href="/logout" class="buttons" onclick="sign_out();">Logout</a>
+        {% elif status == False: %}
+          <!-- Link to create new user - TODO only show if not logged in -->
+            <a href='{{url_for('create_user') }}'>Create Account</a>
+        {% endif %}
+      </div>
+      <div class="navbar_three header_text">
+        {% if status == True: %}
+            <!-- Logout button  -->
+             <a href="/logout" class="buttons" onclick="sign_out();">Logout</a>
+        {% elif status == False: %}
+          <!-- Link to create new user - TODO only show if not logged in -->
+            <a href="{{url_for('login')}}" class="buttons">Login</a>
+        {% endif %}
+      </div>
+
+      <div class="login">
+        <em>
+          'Software testing is an investigation conducted to provide stakeholders
+          with information about the quality of the software product or
+          service under test.'
+        </em>
       </div>
 
     <span class="description">
