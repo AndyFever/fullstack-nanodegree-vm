@@ -125,6 +125,13 @@
   padding: 20px;
 }
 
+.article_text {
+  font-family: "Helvetica";
+  font-size: 20px;
+  padding-top: 30px;
+  padding-bottom: 30px;
+}
+
 .categorys {
   display: grid;
   grid-area: categorys;
