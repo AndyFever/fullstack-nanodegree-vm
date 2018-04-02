@@ -24,22 +24,25 @@
 .navbar_one {
   display: grid;
   grid-area: navbar_one;
-  background: #F78733;
+  background: #a4dcd3;
   text-align: center;
+  color: white;
 }
 
 .navbar_two {
   display: grid;
   grid-area: navbar_two;
-  background: #F78733;
+  background: #a4dcd3;
   text-align: center;
+  color: white;
 }
 
 .navbar_three {
   display: grid;
   grid-area: navbar_three;
-  background: #F78733;
+  background: #a4dcd3;
   text-align: center;
+  color: white;
 }
 
 .login{
