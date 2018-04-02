@@ -1,28 +1,27 @@
 {% extends "index.html" %}
   {% block body %}
-  <div class="selection_block">
+  <div class="categorys">
     <span class="items">
       <div>
         <p class="header_text">Categories</p>
           {% for item in categories %}
-            <div class="category">
+
               <div class="title">
                 <a href='{{url_for('show_articles_by_category',
                 catalog_id = item.id) }}'>{{ item.category }}</a>
               </div>
               <br />
-            </div>
+
           {% endfor %}
       </div>
     </span>
-    <span class="articles">
-      {% for item in articles %}
-        <div class="article">
-          <div class="article_title">
-            <a href='{{url_for('show_article', article_id = item.id, catalog_id = item.parent_id) }}'>{{ item.title }}</a>
-          </div>
-        </div>
-      {% endfor %}
-    </span>
   </div>
+    <span class="article">
+      <p class="header_text">Articles in selected topic:</p>
+          {% for item in articles %}
+              <a href='{{url_for('show_article', article_id = item.id, catalog_id = item.parent_id) }}'>{{ item.title }}</a>
+          {% endfor %}
+    </div>
+  </div>
+    </span>
   {% endblock %}
