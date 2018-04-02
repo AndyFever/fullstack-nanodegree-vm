@@ -1,4 +1,4 @@
-.site {
+.site_home {
   display: grid;
   background: white;
   grid-template-columns: 10em 1fr 1fr 1fr 10em;
@@ -9,7 +9,29 @@
     ". navbar_one navbar_two navbar_three ."
     ". description description description ."
     ". categorys article preview ."
-    ". recent_activity recent_activity recent_activity ."
+    ". recent_activity recent_activity recent_activity .";
+}
+
+.site_display_content {
+  display: grid;
+  background: white;
+  grid-template-columns: 10em 1fr 4fr 2fr 10em;
+  grid-template-rows: 200px 1fr auto;
+  grid-gap: 0.5em;
+  grid-template-areas:
+    ". header_m header_m login_m ."
+    ". navbar_one_m navbar_two_m navbar_three_m ."
+    ". message message message .";
+}
+
+.message {
+  /* Displays the content the user has selected */
+  display: grid;
+  grid-area: message;
+  background: #4ABDAC;
+  font-family: 'Alfa Slab One';
+  font-size: 22px;
+  padding: 40px;
 }
 
 .header {
@@ -21,9 +43,26 @@
   grid-area: header;
 }
 
+.header_m {
+  display: grid;
+  background: #4ABDAC;
+  padding: 50px;
+  font-family: 'Alfa Slab One';
+  font-size: 65px;
+  grid-area: header_m;
+}
+
 .navbar_one {
   display: grid;
   grid-area: navbar_one;
+  background: #a4dcd3;
+  text-align: center;
+  color: white;
+}
+
+.navbar_one_m {
+  display: grid;
+  grid-area: navbar_one_m;
   background: #a4dcd3;
   text-align: center;
   color: white;
@@ -37,9 +76,25 @@
   color: white;
 }
 
+.navbar_two_m {
+  display: grid;
+  grid-area: navbar_two_m;
+  background: #a4dcd3;
+  text-align: center;
+  color: white;
+}
+
 .navbar_three {
   display: grid;
   grid-area: navbar_three;
+  background: #a4dcd3;
+  text-align: center;
+  color: white;
+}
+
+.navbar_three_m {
+  display: grid;
+  grid-area: navbar_three_m;
   background: #a4dcd3;
   text-align: center;
   color: white;
@@ -51,6 +106,14 @@
   font-size: 24px;
   padding: 40px;
   grid-area: login;
+}
+
+.login_m {
+  display: grid;
+  background: #4ABDAC;
+  font-size: 24px;
+  padding: 40px;
+  grid-area: login_m;
 }
 
 .description {
@@ -131,11 +194,13 @@
   font-size: 25px;
 }
 
+.form {
+  padding: 20px
+}
 .align_center {
   text-align: center;
 }
 
 .align_right {
   text-align: right;
-
 }
