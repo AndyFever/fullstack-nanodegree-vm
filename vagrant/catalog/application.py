@@ -13,6 +13,7 @@ from flask import make_response
 import requests
 import random
 import string
+import bleach
 
 auth = HTTPBasicAuth()
 engine = create_engine('sqlite:///catalog.db')
@@ -92,9 +93,9 @@ def edit_article(article_id):
          categories=categories,
          article=article,)
     elif request.method=='POST':
-        title = request.form['title']
-        description = request.form['my_article']
-        category = request.form['category']
+        title = bleach.clean(request.form['title'])
+        description = bleach.clean(request.form['my_article'])
+        category = bleach.clean(request.form['category'])
 
         print('Title: {}'.format(title))
 
@@ -131,9 +132,9 @@ def add_article():
         return render_template('add_article.html', categories=categories)
     elif request.method=='POST':
         # Get the request info and add the new request to the database
-        title = request.form['title']
-        description = request.form['description']
-        category = request.form['category']
+        title = bleach.clean(request.form['title'])
+        description = bleach.clean(request.form['description'])
+        category = bleach.clean(request.form['category'])
 
         # TODO Update the owner once login functionality is complete
         new_article = Article(title=title,
@@ -186,8 +187,8 @@ def login():
                     for x in range(32))
     login_session['state'] = state
     if request.method == "POST":
-        username = request.form['username']
-        password = request.form['password']
+        username = bleach.clean(request.form['username'])
+        password = bleach.clean(request.form['password'])
 
         # Check the username and password
         if session.query(User).filter_by(username=username).first():
@@ -212,8 +213,8 @@ def login():
 def create_user():
     """Allows the creation of a new user"""
     if request.method == "POST":
-        username = request.form['username']
-        password = request.form['password']
+        username = bleach.clean(request.form['username'])
+        password = bleach.clean(request.form['password'])
         user = session.query(User).first()
         # The user exists, abort the action
         # TODO Add an error page for the problematic user request
