@@ -100,6 +100,10 @@
   color: white;
 }
 
+input[type=text] {
+  width: 80%;
+}
+
 .login{
   display: grid;
   background: #4ABDAC;
@@ -210,4 +214,12 @@
 
 .align_right {
   text-align: right;
+}
+
+.input_text_style {
+  font-size: 20px;
+}
+
+.padding_left {
+  padding-left: 30px;
 }

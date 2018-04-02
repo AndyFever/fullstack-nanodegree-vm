@@ -93,8 +93,10 @@ def edit_article(article_id):
          article=article,)
     elif request.method=='POST':
         title = request.form['title']
-        description = request.form['description']
+        description = request.form['my_article']
         category = request.form['category']
+
+        print('Title: {}'.format(title))
 
         # Update any records that have been returned
         if title:
