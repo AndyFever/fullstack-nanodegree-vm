@@ -1,18 +1,20 @@
-{% extends "index.html" %}
+{% extends "message.html" %}
 {% block body %}
-Add Article
-  <form method="POST">
-    Title:<br />
-    <input type="text" name="title" /><br />
-    Description:<br />
-    <input type="text" name="description" /><br />
-    Categegory:<br />
-    <select name="category">
-      {% for item in categories %}
-        <option value="{{item.id}}">{{item.category}}</option>
-        <br /><br />
-      {% endfor%}
-    </select>
-    <input type="submit" value="Sumbit" />
-  </form>
+  <div class="message">
+    Add Article
+      <form method="POST">
+        Title:<br />
+        <input type="text" name="title" /><br />
+        Description:<br />
+        <input type="text" name="description" /><br />
+        Categegory:<br />
+        <select name="category">
+          {% for item in categories %}
+            <option value="{{item.id}}">{{item.category}}</option>
+            <br /><br />
+          {% endfor%}
+        </select>
+        <input type="submit" value="Sumbit" />
+      </form>
+  </div>
 {% endblock %}
