@@ -33,7 +33,7 @@ def show_homepage():
     categories = session.query(Category).all()
     articles = session.query(Article).limit(10)
     status = is_authenticated()
-
+    print('Status: {}'.format(status))
     # Load the last five records from History if logged in
     if status:
         history = session.query(History).filter_by(viewer=login_session['username']).all()
@@ -204,6 +204,7 @@ def login():
                 print('User {} has been succesfully validated - result: {}'.format(user.username, result))
                 # Set the session variable to a logged in state
                 g.user = user
+                login_session['authenicated?'] = True
             return redirect('/', code=302)
         else:
             # User doesn't exist flash error message
