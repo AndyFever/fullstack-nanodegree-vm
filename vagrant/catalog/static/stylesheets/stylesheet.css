@@ -1,28 +1,65 @@
 .site_home {
   display: grid;
   background: white;
-  grid-template-columns: 10em 1fr 1fr 1fr 10em;
-  grid-template-rows: 200px auto auto 1fr;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto auto auto auto 1fr;
   grid-gap: 0.5em;
   grid-template-areas:
-    ". header header login ."
-    ". navbar_one navbar_two navbar_three ."
-    ". description description description ."
-    ". categorys article preview ."
-    ". recent_activity recent_activity recent_activity .";
+    "header header"
+    "login login"
+    "navbar_one navbar_three"
+    "description description"
+    "categorys article"
+    "recent_activity recent_activity";
 }
 
 .site_display_content {
   display: grid;
   background: white;
-  grid-template-columns: 10em 1fr 4fr 2fr 10em;
-  grid-template-rows: 200px 1fr auto;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto auto auto auto 1fr;
   grid-gap: 0.5em;
   grid-template-areas:
-    ". header_m header_m login_m ."
-    ". navbar_one_m navbar_two_m navbar_three_m ."
-    ". message message message .";
+    "header_m header_m"
+    "login_m login_m"
+    "navbar_one_m navbar_three_m"
+    "message message";
 }
+
+@media screen and (min-width: 600px) {
+  /* Sets up the grid for the whole site on large screens */
+  .site_home {
+    display: grid;
+    background: white;
+    grid-template-columns: 10em 1fr 1fr 1fr 10em;
+    grid-template-rows: auto auto auto auto 1fr;
+    grid-gap: 0.5em;
+    grid-template-areas:
+      ". header header login ."
+      ". navbar_one navbar_two navbar_three ."
+      ". description description description ."
+      ". categorys article preview ."
+      ". recent_activity recent_activity recent_activity .";
+  }
+}
+
+@media screen and (min-width: 600px) {
+  /* Sets up the grid for the whole site on large screens */
+  .site_display_content {
+    display: grid;
+    background: white;
+    grid-template-columns: 10em 1fr 1fr 1fr 10em;
+    grid-template-rows: auto auto auto;
+    grid-gap: 0.5em;
+    grid-template-areas:
+      ". header_m header_m login_m ."
+      ". navbar_one_m navbar_two_m navbar_three_m ."
+      ". message message message .";
+  }
+}
+
+
+
 
 .message {
   /* Displays the content the user has selected */
