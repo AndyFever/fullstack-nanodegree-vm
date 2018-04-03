@@ -28,7 +28,7 @@
       <div class="navbar_three header_text">
         {% if status == True: %}
             <!-- Logout button  -->
-             <a href="/logout" class="buttons" onclick="sign_out();">Logout</a>
+             <a href="/logout" class="buttons" id='logout' onclick="sign_out();">Logout</a>
         {% elif status == False: %}
           <!-- Link to create new user - TODO only show if not logged in -->
             <a href="{{url_for('login')}}" class="buttons">Login</a>

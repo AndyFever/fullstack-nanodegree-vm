@@ -5,13 +5,15 @@
     <script src="//apis.google.com/js/platform.js?onload=start"> </script>
     <!-- END PRE-REQUISITES FOR GOOGLE SIGN IN -->
       <div class="message">
-        Please enter a username and password to create a new user: <br /><br />
+        <p id='auth_message'>
+          Please enter a username and password to create a new user: <br /><br />
+        </p>
         <form method='POST' class="form">
           Username:<br />
-          <input type="text" name="username" /><br />
+          <input type="text" name="username" id='username'/><br />
           Password:<br />
-          <input type="text" name="password" /><br />
-          <input type="submit" value="Submit">
+          <input type="text" name="password" id='password'/><br />
+          <input type="submit" value="Submit" id='submit'>
         </form>
       </div>
   {% endblock %}
