@@ -31,5 +31,5 @@ def step_impl(context):
 @then(u'I should be logged in with username "{username}" and password "{password}"')
 def step_impl(context, username, password):
     # User should be redirected to the homepage
-    message = context.browser.find_by_id('logout')
+    message = context.browser.find_by_link('Logout')
     message.text == 'Logout'

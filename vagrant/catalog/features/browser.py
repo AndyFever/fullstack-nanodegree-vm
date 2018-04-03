@@ -25,3 +25,9 @@ class Browser(object):
         find a page element in the DOM
         """
         return self.driver.find_element_by_id(selector)
+
+    def find_by_link(self, selector):
+        """
+        find an element with link text in the DOM
+        """
+        return self.driver.find_element_by_link_text(selector)
