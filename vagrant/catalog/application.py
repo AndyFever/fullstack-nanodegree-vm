@@ -34,15 +34,21 @@ def show_homepage():
     articles = session.query(Article).limit(10)
     status = is_authenticated()
 
-    # Load the last three records from History
-    # TODO Bug here when loging in for the first time. Don't display if status if false
-    history = session.query(History).filter_by(viewer=login_session['username']).all()
-    history.reverse() # Get the most recent record first
-    return render_template('homepage.html',
-     categories=categories,
-     articles=articles,
-     history=history,
-     status=status,)
+    # Load the last five records from History if logged in
+    if status:
+        history = session.query(History).filter_by(viewer=login_session['username']).all()
+        history.reverse() # Get the most recent record first
+        history = history[:5] # Only display the last five rows
+        return render_template('homepage.html',
+         categories=categories,
+         articles=articles,
+         history=history,
+         status=status,)
+    else:
+        return render_template('homepage.html',
+         categories=categories,
+         articles=articles,
+         status=status,)
 
 
 @app.route('/catalog/<int:catalog_id>/items')
@@ -53,7 +59,6 @@ def show_articles_by_category(catalog_id):
     category = session.query(Category).filter_by(id=catalog_id)
     articles = session.query(Article).filter_by(parent_id=catalog_id)
     status = is_authenticated()
-    # TODO Return all the data - status is set to True until login is done
     return render_template('articles_by_category.html',
      category=category,
      categories=categories,
