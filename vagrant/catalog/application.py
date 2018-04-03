@@ -29,6 +29,7 @@ APPLICATION_NAME = 'Product Catalog'
 
 @app.route('/')
 def show_homepage():
+
     """Displays all the categories and the first ten articles"""
     categories = session.query(Category).all()
     articles = session.query(Article).limit(10)
@@ -78,7 +79,6 @@ def show_article(catalog_id, article_id):
         record = History(viewer=username,
         action='viewed',
         viewed_article=article_id)
-        print('Adding record')
         session.add(record)
         session.commit()
 
@@ -101,8 +101,6 @@ def edit_article(article_id):
         title = bleach.clean(request.form['title'])
         description = bleach.clean(request.form['my_article'])
         category = bleach.clean(request.form['category'])
-
-        print('Title: {}'.format(title))
 
         # Update any records that have been returned
         if title:
@@ -205,6 +203,7 @@ def login():
                 # Set the session variable to a logged in state
                 g.user = user
                 login_session['authenicated?'] = True
+                login_session['username'] = user.username
             return redirect('/', code=302)
         else:
             # User doesn't exist flash error message
