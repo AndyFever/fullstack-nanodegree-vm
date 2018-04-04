@@ -33,3 +33,17 @@ def step_impl(context, username, password):
     # User should be redirected to the homepage
     message = context.browser.find_by_link('Logout')
     message.text == 'Logout'
+
+@then(u'I should see a message saying "user succesfully created"')
+def step_impl(context):
+    pass
+
+@given(u'I am on the homepage')
+def step_impl(context):
+    context.browser.visit('/')
+
+@then(u'I should see the following categories')
+def step_impl(context):
+    categorys = context.browser.find_elements_by_id('categorys')
+    print(categorys)
+    assert_that(categorys(categorys. has_item('Tools')))

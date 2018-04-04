@@ -192,24 +192,27 @@ def login():
     if request.method == "POST":
         username = bleach.clean(request.form['username'])
         password = bleach.clean(request.form['password'])
-
-        # Check the username and password
-        if session.query(User).filter_by(username=username).first():
-            # User exists, check the password
-            user = session.query(User).filter_by(username=username).first()
-            result = user.verify_password(password)
-            if result:
-                print('User {} has been succesfully validated - result: {}'.format(user.username, result))
-                # Set the session variable to a logged in state
-                g.user = user
-                login_session['authenicated?'] = True
-                login_session['username'] = user.username
-            return redirect('/', code=302)
+        if username == "" or password == "":
+            # Incorrect details provided
+            return render_template('login_with_error.html')
         else:
-            # User doesn't exist flash error message
-            print('User - {}, unsucceful login attempt'.format(user.username))
-            return redirect('/', code=302)
-    else:
+            # Check the username and password
+            if session.query(User).filter_by(username=username).first():
+                # User exists, check the password
+                user = session.query(User).filter_by(username=username).first()
+                result = user.verify_password(password)
+                if result:
+                    print('User {} has been succesfully validated - result: {}'.format(user.username, result))
+                    # Set the session variable to a logged in state
+                    g.user = user
+                    login_session['authenicated?'] = True
+                    login_session['username'] = user.username
+                return redirect('/', code=302)
+            else:
+                # User doesn't exist flash error message
+                print('User - {}, unsucceful login attempt'.format(user.username))
+                return redirect('/', code=302)
+    elif request.method == 'GET':
         # Display the login page
         return render_template('login.html', STATE=state)
 
@@ -223,10 +226,13 @@ def create_user():
         user = session.query(User).first()
         # The user exists, abort the action
         # TODO Add an error page for the problematic user request
-        add_user(username, password)
-        #  TODO Can we put a flash message here
-        return redirect('/', code=302)
-    else:
+        if username != "" and password != "":
+            add_user(username, password)
+            return redirect('/', code=302)
+        else:
+            # Return error message
+            return render_template('new_user_with_error.html')
+    elif request.method =='GET':
         # Display the new user form
         return render_template('new_user.html')
 

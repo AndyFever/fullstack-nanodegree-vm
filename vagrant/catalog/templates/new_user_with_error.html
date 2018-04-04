@@ -1,0 +1,24 @@
+{% extends "message.html" %}
+  {% block body %}
+  <!--LOAD PRE-REQUISITES FOR GOOGLE SIGN IN -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script src="//apis.google.com/js/platform.js?onload=start"> </script>
+    <!-- END PRE-REQUISITES FOR GOOGLE SIGN IN -->
+      <div class="message">
+        <p id='auth_message'>
+          Please enter a username and password to create a new user: <br /><br />
+        </p>
+        <p>
+          <strong>
+            Please enter a valid username and password
+          </strong>
+        </p>
+        <form method='POST' class="form">
+          Username:<br />
+          <input type="text" name="username" id='username'/><br />
+          Password:<br />
+          <input type="text" name="password" id='password'/><br />
+          <input type="submit" value="Submit" id='submit'>
+        </form>
+      </div>
+  {% endblock %}
