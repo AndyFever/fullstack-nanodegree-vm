@@ -28,9 +28,9 @@ CLIENT_ID = json.loads(
     open('client_secrets.json', 'r').read())['web']['client_id']
 APPLICATION_NAME = 'Product Catalog'
 
+
 @app.route('/')
 def show_homepage():
-
     """Displays all the categories and the first ten articles"""
     categories = session.query(Category).all()
     articles = session.query(Article).limit(10)
@@ -40,18 +40,18 @@ def show_homepage():
     if status:
         history = session.query(History).filter_by(
             viewer=login_session['username']).all()
-        history.reverse() # Get the most recent record first
-        history = history[:5] # Only display the last five rows
+        history.reverse()  # Get the most recent record first
+        history = history[:5]  # Only display the last five rows
         return render_template('homepage.html',
-         categories=categories,
-         articles=articles,
-         history=history,
-         status=status,)
+                               categories=categories,
+                               articles=articles,
+                               history=history,
+                               status=status,)
     else:
         return render_template('homepage.html',
-         categories=categories,
-         articles=articles,
-         status=status,)
+                               categories=categories,
+                               articles=articles,
+                               status=status,)
 
 
 @app.route('/catalog/<int:catalog_id>/items')
@@ -63,10 +63,10 @@ def show_articles_by_category(catalog_id):
     articles = session.query(Article).filter_by(parent_id=catalog_id)
     status = is_authenticated()
     return render_template('articles_by_category.html',
-     category=category,
-     categories=categories,
-     articles=articles,
-     status=status,)
+                           category=category,
+                           categories=categories,
+                           articles=articles,
+                           status=status,)
 
 
 @app.route('/catalog/<int:catalog_id>/<int:article_id>')
@@ -77,16 +77,16 @@ def show_article(catalog_id, article_id):
     status = is_authenticated()
     # Add the viewing history to the database if the user is logged in
     if status:
-        username =  login_session['username']
+        username = login_session['username']
         record = History(viewer=username,
-        action='viewed',
-        viewed_article=article_id)
+                         action='viewed',
+                         viewed_article=article_id)
         session.add(record)
         session.commit()
 
     return render_template('article.html',
-     article=article,
-     status=status,)
+                           article=article,
+                           status=status,)
 
 
 @app.route('/catalog/<int:article_id>/edit', methods=['GET', 'POST'])
@@ -95,11 +95,11 @@ def edit_article(article_id):
     # Below may be wrong and why only one cat is brought back
     categories = session.query(Category).filter_by(id=article.parent_id)
 
-    if request.method=='GET':
+    if request.method == 'GET':
         return render_template('edit_article.html',
-         categories=categories,
-         article=article,)
-    elif request.method=='POST':
+                               categories=categories,
+                               article=article,)
+    elif request.method == 'POST':
         title = bleach.clean(request.form['title'])
         description = bleach.clean(request.form['my_article'])
         category = bleach.clean(request.form['category'])
@@ -116,26 +116,26 @@ def edit_article(article_id):
         session.commit()
 
         # Update the history for the article
-        username =  login_session['username']
+        username = login_session['username']
         record = History(viewer=username,
-        action='edited',
-        viewed_article=article_id)
+                         action='edited',
+                         viewed_article=article_id)
         print('Adding record')
         session.add(record)
         session.commit()
-        flash ('Article has been amended')
+        flash('Article has been amended')
         return redirect('/', code=302)
 
 
 @app.route('/catalog/add_article', methods=['GET', 'POST'])
 def add_article():
     """Allows the user to create and save an article"""
-    if request.method=='GET':
+    if request.method == 'GET':
         #  Get the list of categories so the user can select
         categories = session.query(Category).all()
         # Display the add_article page
         return render_template('add_article.html', categories=categories)
-    elif request.method=='POST':
+    elif request.method == 'POST':
         # Get the request info and add the new request to the database
         title = bleach.clean(request.form['title'])
         description = bleach.clean(request.form['description'])
@@ -143,9 +143,9 @@ def add_article():
 
         # TODO Update the owner once login functionality is complete
         new_article = Article(title=title,
-            article_text=description,
-            parent_id=category,
-            owner='admin')
+                              article_text=description,
+                              parent_id=category,
+                              owner='admin')
         session.add(new_article)
         session.commit()
         flash('Record created')
@@ -155,12 +155,13 @@ def add_article():
 @app.route('/catalog/<int:article_id>/delete', methods=['GET', 'POST'])
 def delete_article(article_id):
     """Allows the user to delete an article"""
-    if request.method=='GET':
+    if request.method == 'GET':
         # Display the delete article page
         return render_template('delete_article.html')
-    elif request.method=='POST':
+    elif request.method == 'POST':
         # Delete the specified article
-        delete_article = session.query(Article).filter_by(id=article_id).first()
+        delete_article = session.query(Article).filter_by(
+            id=article_id).first()
         session.delete(delete_article)
         session.commit()
         flash('Article deleted')
@@ -249,7 +250,7 @@ def create_user():
         else:
             # Return error message
             return render_template('new_user_with_error.html')
-    elif request.method =='GET':
+    elif request.method == 'GET':
         # Display the new user form
         return render_template('new_user.html')
 
@@ -264,13 +265,13 @@ def get_auth_token():
 
 @auth.verify_password
 def verify_password(username_or_token, password):
-    #Try to see if it's a token first
+    #  Try to see if it's a token first
     user_id = User.verify_auth_token(username_or_token)
     if user_id:
-        user = session.query(User).filter_by(id = user_id).one()
+        user = session.query(User).filter_by(id=user_id).one()
     else:
         user = session.query(User).filter_by(
-            username = username_or_token).first()
+            username=username_or_token).first()
         if not user or not user.verify_password(password):
             return False
     g.user = user
@@ -284,7 +285,7 @@ def add_user(username, password):
     if session.query(User).filter_by(username=username).first():
         return False
     else:
-        user = User(username = username)
+        user = User(username=username)
         user.hash_password(password)
         session.add(user)
         session.commit()
@@ -378,11 +379,11 @@ def gconnect():
 @app.route('/logout', methods=['GET', 'POST'])
 def logout():
     """Logs the current user out of the application"""
-    if request.method=='GET':
+    if request.method == 'GET':
         # Display the logout page
         return render_template('logout.html')
 
-    elif request.method=='POST':
+    elif request.method == 'POST':
         # Log the current user out
         print('Loging the user out')
         log_user_out()
@@ -401,6 +402,7 @@ def is_authenticated():
         return False
     else:
         return False
+
 
 def log_user_out():
     """Logs the current user out"""
