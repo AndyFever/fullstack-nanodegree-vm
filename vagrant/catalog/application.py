@@ -1,5 +1,6 @@
 from models import Base, User, Article, Category, History
-from flask import Flask, jsonify, request, render_template, abort, redirect, g, flash
+from flask import Flask, jsonify, request, render_template, abort, redirect
+from flask import g, flash
 from flask_httpauth import HTTPBasicAuth
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, sessionmaker
@@ -37,7 +38,8 @@ def show_homepage():
     print('Status: {}'.format(status))
     # Load the last five records from History if logged in
     if status:
-        history = session.query(History).filter_by(viewer=login_session['username']).all()
+        history = session.query(History).filter_by(
+            viewer=login_session['username']).all()
         history.reverse() # Get the most recent record first
         history = history[:5] # Only display the last five rows
         return render_template('homepage.html',
@@ -168,7 +170,9 @@ def delete_article(article_id):
 @app.route('/catalog.json')
 @auth.login_required
 def catalog_json():
-    """Return all of the catalog and articles in json form - should be logged in"""
+    """
+    Return all of the catalog and articles in json form - should be logged in
+    """
     all_categories = session.query(Category).all()
     all_articles = session.query(Article).all()
     data = []
@@ -215,7 +219,6 @@ def login():
                 user = session.query(User).filter_by(username=username).first()
                 result = user.verify_password(password)
                 if result:
-                    print('User {} has been succesfully validated - result: {}'.format(user.username, result))
                     # Set the session variable to a logged in state
                     g.user = user
                     login_session['authenicated?'] = True
@@ -223,7 +226,8 @@ def login():
                 return redirect('/', code=302)
             else:
                 # User doesn't exist flash error message
-                print('User - {}, unsucceful login attempt'.format(user.username))
+                print('User - {}, unsucceful login attempt'.format(
+                    user.username))
                 return redirect('/', code=302)
     elif request.method == 'GET':
         # Display the login page
@@ -265,7 +269,8 @@ def verify_password(username_or_token, password):
     if user_id:
         user = session.query(User).filter_by(id = user_id).one()
     else:
-        user = session.query(User).filter_by(username = username_or_token).first()
+        user = session.query(User).filter_by(
+            username = username_or_token).first()
         if not user or not user.verify_password(password):
             return False
     g.user = user
@@ -337,7 +342,7 @@ def gconnect():
     stored_access_token = login_session.get('access_token')
     stored_gplus_id = login_session.get('gplus_id')
     if stored_access_token is not None and gplus_id == stored_gplus_id:
-        response = make_response(json.dumps('Current user is already connected.'),
+        response = make_response(json.dumps('User is already connected.'),
                                  200)
         response.headers['Content-Type'] = 'application/json'
         return response
