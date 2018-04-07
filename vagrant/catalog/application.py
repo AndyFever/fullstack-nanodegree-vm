@@ -168,8 +168,7 @@ def delete_article(article_id):
 @app.route('/catalog.json')
 @auth.login_required
 def catalog_json():
-    """Return all of the catalog in json form - should be logged in"""
-    # TODO Remove default status of true once login func completed
+    """Return all of the catalog and articles in json form - should be logged in"""
     all_categories = session.query(Category).all()
     return jsonify(Category=[i.serialize for i in all_categories])
 
