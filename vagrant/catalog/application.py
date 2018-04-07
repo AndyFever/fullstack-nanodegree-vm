@@ -170,7 +170,21 @@ def delete_article(article_id):
 def catalog_json():
     """Return all of the catalog and articles in json form - should be logged in"""
     all_categories = session.query(Category).all()
-    return jsonify(Category=[i.serialize for i in all_categories])
+    all_articles = session.query(Article).all()
+    data = []
+    for cat in all_categories:
+
+        articles = []
+        for art in all_articles:
+            if cat.id == art.parent_id:
+                new_article = ["article_id", art.id,
+                               "title", art.title,
+                               "text", art.article_text,
+                               "owner", art.owner]
+                new_article = new_article
+                articles.append(new_article)
+        data.append([cat.category, articles])
+    return jsonify(dict(data))
 
 
 @app.route('/users.json')
