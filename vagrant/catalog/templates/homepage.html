@@ -10,6 +10,14 @@
             </div>
           {% endfor %}
       </div>
+      {% if status == True %}
+      <!-- User is logged in, show the add catalog category link-->
+      <div class="header_text align_bottom_right">
+          <a href="{{url_for('add_category')}}">Add Category</a>
+        </div>
+      {% elif status == False %}
+        <!-- Don't display a link -->
+      {% endif %}
     </span>
     <span class="article">
       <div>
@@ -29,7 +37,7 @@
       {% endfor %}
       <!-- Code to add new article -->
       {% if status == True %}
-        <!-- User loged in - show add article link -->
+        <!-- User logged in - show add article link -->
         <div class="header_text align_right">
           <a href="{{url_for('add_article')}}">Add Article</a>
         </div>

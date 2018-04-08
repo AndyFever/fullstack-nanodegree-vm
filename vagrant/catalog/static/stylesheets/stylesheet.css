@@ -176,6 +176,7 @@ input[type=text] {
 .categorys {
   display: grid;
   grid-area: categorys;
+  position: relative;
   padding: 40px;
   font-size: 22px;
   background: #4ABDAC;
@@ -251,6 +252,13 @@ input[type=text] {
 
 .align_right {
   text-align: right;
+}
+
+.align_bottom_right {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  padding: 30px;
 }
 
 .input_text_style {

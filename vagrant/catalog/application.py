@@ -138,6 +138,29 @@ def edit_article(article_id):
 
 
 @app.route('/catalog/add_article', methods=['GET', 'POST'])
+def add_category():
+    """
+    Allows the user to create a new category
+    * The user must be logged in to view this page
+    * If not logged in, they should be redirected to the login page
+    """
+    if is_authenticated():
+        if request.method == 'GET':
+            return render_template('add_category.html')
+        if request.method == 'POST':
+            # Get the request info and add the new request to the database
+            category = bleach.clean(request.form['category'])
+
+            # Create the new record and add to the database
+            new_category = Category(category=category)
+            session.add(new_category)
+            session.commit()
+            return redirect('/', code=302)
+
+    else:
+        return redirect('/login')
+
+@app.route('/catalog/add_article', methods=['GET', 'POST'])
 def add_article():
     """
     Allows the user to create and save an article
@@ -151,10 +174,6 @@ def add_article():
             # Display the add_article page
             return render_template('add_article.html', categories=categories)
         elif request.method == 'POST':
-            print('Username`: {}'.format(login_session['username']))
-            #  Only complete if the user has a active session
-
-            print('Request method: {}'.format(request.method))
             # Get the request info and add the new request to the database
             title = bleach.clean(request.form['title'])
             description = bleach.clean(request.form['description'])
