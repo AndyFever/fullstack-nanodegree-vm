@@ -31,32 +31,33 @@ APPLICATION_NAME = 'Product Catalog'
 
 @app.route('/')
 def show_homepage():
-    """Displays all the categories and the first ten articles"""
+    """
+    Displays all the categories and the first ten articles
+    """
     categories = session.query(Category).all()
     articles = session.query(Article).limit(10)
-    status = is_authenticated()
-    print('Status: {}'.format(status))
-    # Load the last five records from History if logged in
-    if status:
+    # Load  and return the last five records from History (if logged in)
+    if is_authenticated():
         history = session.query(History).filter_by(
             viewer=login_session['username']).all()
         history.reverse()  # Get the most recent record first
-        history = history[:5]  # Only display the last five rows
         return render_template('homepage.html',
                                categories=categories,
                                articles=articles,
-                               history=history,
-                               status=status,)
+                               history=history[:5],
+                               status=is_authenticated(),)
     else:
         return render_template('homepage.html',
                                categories=categories,
                                articles=articles,
-                               status=status,)
+                               status=is_authenticated(),)
 
 
 @app.route('/catalog/<int:catalog_id>/items')
 def show_articles_by_category(catalog_id):
-    """Displays all the articles associated with a specific category"""
+    """
+    Displays all the articles associated with a specific category
+    """
     # Get the category title and related articles
     categories = session.query(Category).all()
     category = session.query(Category).filter_by(id=catalog_id)
@@ -170,9 +171,6 @@ def add_article():
             return redirect('/', code=302)
     else:
         return redirect('/login')
-
-
-
 
 
 @app.route('/catalog/<int:article_id>/delete', methods=['GET', 'POST'])
