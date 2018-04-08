@@ -137,7 +137,7 @@ def edit_article(article_id):
         return redirect('/login')
 
 
-@app.route('/catalog/add_article', methods=['GET', 'POST'])
+@app.route('/catalog/add_category', methods=['GET', 'POST'])
 def add_category():
     """
     Allows the user to create a new category

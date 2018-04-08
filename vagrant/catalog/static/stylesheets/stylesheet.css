@@ -59,7 +59,11 @@
 }
 
 
-
+.preview {
+  display: grid;
+  grid-area: preview;
+  background: #4ABDAC;
+}
 
 .message {
   /* Displays the content the user has selected */
@@ -186,6 +190,7 @@ input[type=text] {
   display: grid;
   grid-area: article;
   padding: 40px;
+  padding-top: 10px;
   font-size: 22px;
   background: #4ABDAC;
 }
