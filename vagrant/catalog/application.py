@@ -90,89 +90,121 @@ def show_article(catalog_id, article_id):
 
 
 @app.route('/catalog/<int:article_id>/edit', methods=['GET', 'POST'])
+@auth.login_required
 def edit_article(article_id):
-    article = session.query(Article).filter_by(id=article_id).first()
-    # Below may be wrong and why only one cat is brought back
-    categories = session.query(Category).filter_by(id=article.parent_id)
+    """
+    Allows the user to edit and save an article
+    * The user must be logged in to view this page
+    * If not logged in, they should be redirected to the login page
+    """
+    if is_authenticated():
+        article = session.query(Article).filter_by(id=article_id).first()
+        # Below may be wrong and why only one cat is brought back
+        categories = session.query(Category).filter_by(id=article.parent_id)
 
-    if request.method == 'GET':
-        return render_template('edit_article.html',
-                               categories=categories,
-                               article=article,)
-    elif request.method == 'POST':
-        title = bleach.clean(request.form['title'])
-        description = bleach.clean(request.form['my_article'])
-        category = bleach.clean(request.form['category'])
+        if request.method == 'GET':
+            return render_template('edit_article.html',
+                                   categories=categories,
+                                   article=article,)
+        elif request.method == 'POST':
+            title = bleach.clean(request.form['title'])
+            description = bleach.clean(request.form['my_article'])
+            category = bleach.clean(request.form['category'])
 
-        # Update any records that have been returned
-        if title:
-            article.title = title
-        if description:
-            article.article_text = description
-        if category:
-            article.parent_id = category
-        # Add and commit the record
-        session.add(article)
-        session.commit()
+            # Update any records that have been returned
+            if title:
+                article.title = title
+            if description:
+                article.article_text = description
+            if category:
+                article.parent_id = category
+            # Add and commit the record
+            session.add(article)
+            session.commit()
 
-        # Update the history for the article
-        username = login_session['username']
-        record = History(viewer=username,
-                         action='edited',
-                         viewed_article=article_id)
-        print('Adding record')
-        session.add(record)
-        session.commit()
-        flash('Article has been amended')
-        return redirect('/', code=302)
+            # Update the history for the article
+            username = login_session['username']
+            record = History(viewer=username,
+                             action='edited',
+                             viewed_article=article_id)
+            print('Adding record')
+            session.add(record)
+            session.commit()
+            flash('Article has been amended')
+            return redirect('/', code=302)
+    else:
+        return redirect('/login')
 
 
 @app.route('/catalog/add_article', methods=['GET', 'POST'])
 def add_article():
-    """Allows the user to create and save an article"""
-    if request.method == 'GET':
-        #  Get the list of categories so the user can select
-        categories = session.query(Category).all()
-        # Display the add_article page
-        return render_template('add_article.html', categories=categories)
-    elif request.method == 'POST':
-        # Get the request info and add the new request to the database
-        title = bleach.clean(request.form['title'])
-        description = bleach.clean(request.form['description'])
-        category = bleach.clean(request.form['category'])
+    """
+    Allows the user to create and save an article
+    * The user must be logged in to view this page
+    * If not logged in, they should be redirected to the login page
+    """
+    if is_authenticated():
+        if request.method == 'GET':
+            #  Get the list of categories so the user can select
+            categories = session.query(Category).all()
+            # Display the add_article page
+            return render_template('add_article.html', categories=categories)
+        elif request.method == 'POST':
+            print('Username`: {}'.format(login_session['username']))
+            #  Only complete if the user has a active session
 
-        # TODO Update the owner once login functionality is complete
-        new_article = Article(title=title,
-                              article_text=description,
-                              parent_id=category,
-                              owner='admin')
-        session.add(new_article)
-        session.commit()
-        flash('Record created')
-        return redirect('/', code=302)
+            print('Request method: {}'.format(request.method))
+            # Get the request info and add the new request to the database
+            title = bleach.clean(request.form['title'])
+            description = bleach.clean(request.form['description'])
+            category = bleach.clean(request.form['category'])
+
+            # TODO Update the owner once login functionality is complete
+            new_article = Article(title=title,
+                                  article_text=description,
+                                  parent_id=category,
+                                  owner='admin')
+            session.add(new_article)
+            session.commit()
+            flash('Record created')
+            return redirect('/', code=302)
+    else:
+        return redirect('/login')
+
+
+
 
 
 @app.route('/catalog/<int:article_id>/delete', methods=['GET', 'POST'])
 def delete_article(article_id):
-    """Allows the user to delete an article"""
-    if request.method == 'GET':
-        # Display the delete article page
-        return render_template('delete_article.html')
-    elif request.method == 'POST':
-        # Delete the specified article
-        delete_article = session.query(Article).filter_by(
-            id=article_id).first()
-        session.delete(delete_article)
-        session.commit()
-        flash('Article deleted')
-        return redirect('/', code=302)
+    """
+    Allows the user to delete an article
+    * The user must be logged in to view this page
+    * If not logged in, they should be redirected to the login page
+    """
+    if is_authenticated():
+        if request.method == 'GET':
+            # Display the delete article page
+            return render_template('delete_article.html')
+        elif request.method == 'POST':
+            # Delete the specified article
+            delete_article = session.query(Article).filter_by(
+                id=article_id).first()
+            session.delete(delete_article)
+            session.commit()
+            flash('Article deleted')
+            return redirect('/', code=302)
+    else:
+        return redirect('/login')
 
 
 @app.route('/catalog.json')
 @auth.login_required
 def catalog_json():
     """
-    Return all of the catalog and articles in json form - should be logged in
+    Return all of the catalog and articles in json form
+    * The user must be logged in to view this page
+    * If not logged in, they should be redirected to the login page
     """
     all_categories = session.query(Category).all()
     all_articles = session.query(Article).all()
@@ -195,8 +227,10 @@ def catalog_json():
 @app.route('/users.json')
 @auth.login_required
 def users_json():
-    """Return all of the users in json form - should be logged in"""
-    # TODO Remove default status of true once login func completed
+    """Return all of the users in json form - should be logged in
+    * The user must be logged in to view this page
+    * If not logged in, they should be redirected to the login page
+    """
     users = session.query(User).all()
     return jsonify(User=[i.serialize for i in users])
 
