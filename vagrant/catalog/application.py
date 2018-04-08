@@ -91,7 +91,6 @@ def show_article(catalog_id, article_id):
 
 
 @app.route('/catalog/<int:article_id>/edit', methods=['GET', 'POST'])
-@auth.login_required
 def edit_article(article_id):
     """
     Allows the user to edit and save an article
@@ -239,6 +238,18 @@ def catalog_json():
                 articles.append(new_article)
         data.append([cat.category, articles])
     return jsonify(dict(data))
+
+@app.route('/histroy.json')
+@auth.login_required
+def catalog_history():
+    """
+    Return the history of viewed and edit articles for the user
+    * The user must be logged in to view this page
+    * If not logged in, they should be redirected to the login page
+    """
+    user_history = session.query(History).filter_by(
+        viewer=login_session['username'])
+    return jsonify(History=[i.serialize for i in user_history])
 
 
 @app.route('/users.json')

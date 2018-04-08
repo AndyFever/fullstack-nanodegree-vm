@@ -21,7 +21,6 @@
           {% for item in articles %}
               <a href='{{url_for('show_article', article_id = item.id, catalog_id = item.parent_id) }}'>{{ item.title }}</a>
           {% endfor %}
-    </div>
-  </div>
     </span>
+    <div class="preview"></div>
   {% endblock %}
