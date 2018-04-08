@@ -93,14 +93,6 @@ class History(Base):
     viewed_article = Column(Integer, ForeignKey('article.id'))
     article = relationship("Article")
 
-    @property
-    def serialize(self):
-        return {'id': self.id,
-        'viewer': self.viewer,
-        'action': self.action,
-        'article': self.article,
-        }
-
 
 engine = create_engine('sqlite:///catalog.db')
 Base.metadata.create_all(engine)

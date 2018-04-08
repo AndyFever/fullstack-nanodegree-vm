@@ -239,18 +239,6 @@ def catalog_json():
         data.append([cat.category, articles])
     return jsonify(dict(data))
 
-@app.route('/histroy.json')
-@auth.login_required
-def catalog_history():
-    """
-    Return the history of viewed and edit articles for the user
-    * The user must be logged in to view this page
-    * If not logged in, they should be redirected to the login page
-    """
-    user_history = session.query(History).filter_by(
-        viewer=login_session['username'])
-    return jsonify(History=[i.serialize for i in user_history])
-
 
 @app.route('/users.json')
 @auth.login_required
