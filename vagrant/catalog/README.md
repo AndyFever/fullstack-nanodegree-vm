@@ -19,6 +19,7 @@ Navigate to the cloned directory containing this fork of the code.  Then:
 3. To prepare the database, run the following commands:
 
 ```
+pip install Flask-Markdown
 python models.py
 python load_data.py
 python application.py
