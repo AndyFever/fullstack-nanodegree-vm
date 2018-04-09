@@ -5,7 +5,12 @@
         <div class="title">{{ article.title}}</div>
           <br />
           <div class="article_text">
-            {{ article.article_text }}
+            <div>
+                    {% filter markdown %}
+                      {{text}}
+                    {% endfilter %}
+            </div>
+
           </div>
           {% if status == True %}
             <!-- Insert link to edit page (if logged in) using url_for -->

@@ -1,4 +1,4 @@
-from sqlalchemy import Table, Column,Integer,String, ForeignKey
+from sqlalchemy import Table, Column, Integer, String, Text, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, sessionmaker
 from sqlalchemy import create_engine
@@ -72,8 +72,8 @@ class Article(Base):
     __tablename__ = 'article'
     id = Column(Integer, primary_key=True)
     parent_id = Column(Integer, ForeignKey('categories.id'))
-    title = Column(String(32), nullable=False)
-    article_text = Column(String, nullable=False)
+    title = Column(Text)
+    article_text = Column(Text, nullable=False)
     owner = Column(String, nullable=False)
     category = relationship("Category")
 

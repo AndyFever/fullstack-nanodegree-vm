@@ -15,6 +15,8 @@ import requests
 import random
 import string
 import bleach
+from flaskext.markdown import Markdown
+import MarkdownParser
 
 auth = HTTPBasicAuth()
 engine = create_engine('sqlite:///catalog.db')
@@ -23,6 +25,7 @@ Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
 app = Flask(__name__)
+Markdown(app)
 
 CLIENT_ID = json.loads(
     open('client_secrets.json', 'r').read())['web']['client_id']
@@ -85,8 +88,17 @@ def show_article(catalog_id, article_id):
         session.add(record)
         session.commit()
 
+    line_text = format_text(article.article_text)
+    if status:
+        pre_txt = "Hi {}, please feel free to amend the article\n".format(
+            username)
+    else:
+        pre_txt = "Please login to edit articles\n"
+
+    text = pre_txt + line_text
     return render_template('article.html',
                            article=article,
+                           text=text,
                            status=status,)
 
 
@@ -460,6 +472,25 @@ def log_user_out():
     login_session['username'] = None
     login_session['gplus_id'] = None
     g.user = None
+
+
+def format_text(text):
+    """Returns the text in a format ready for markdown"""
+
+    formated_text = ""
+    # Split the text based on <br>
+    lines = text.split("<br>")
+    print("lines {}".format(lines))
+
+    # Replace the <strong> tags with **
+
+    for line in lines:
+        line = line.replace("<strong>", "**")
+        line = line.replace("</strong>", "**")
+        line = line + "\n\n"
+        formated_text += line
+    return formated_text
+
 
 if __name__ == '__main__':
     app.debug = True
