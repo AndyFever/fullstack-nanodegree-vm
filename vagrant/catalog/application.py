@@ -142,7 +142,7 @@ def edit_article(article_id):
             print('Adding record')
             session.add(record)
             session.commit()
-            flash('Article has been amended')
+            flash('Article has been succesfully edited')
             return redirect('/', code=302)
     else:
         return redirect('/login')
@@ -166,6 +166,7 @@ def add_category():
             new_category = Category(category=category)
             session.add(new_category)
             session.commit()
+            flash('New category created')
             return redirect('/', code=302)
 
     else:
@@ -197,7 +198,7 @@ def add_article():
                                   owner='admin')
             session.add(new_article)
             session.commit()
-            flash('Record created')
+            flash('New article succesfully created')
             return redirect('/', code=302)
     else:
         return redirect('/login')
@@ -220,7 +221,7 @@ def delete_article(article_id):
                 id=article_id).first()
             session.delete(delete_article)
             session.commit()
-            flash('Article deleted')
+            flash('Article has been succsefully deleted')
             return redirect('/', code=302)
     else:
         return redirect('/login')
@@ -308,6 +309,7 @@ def create_user():
         # TODO Add an error page for the problematic user request
         if username != "" and password != "":
             add_user(username, password)
+            flash('New user created')
             return redirect('/', code=302)
         else:
             # Return error message
@@ -472,6 +474,7 @@ def log_user_out():
     login_session['username'] = None
     login_session['gplus_id'] = None
     g.user = None
+    flash('User has been successfully logged out')
 
 
 def format_text(text):

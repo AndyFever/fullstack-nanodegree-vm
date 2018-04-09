@@ -44,11 +44,23 @@
       </div>
 
     <span class="description">
-      TestingBoK is a online community resource for cataloguing tools, techniques, processes
-      and useful articles related to modern software testing.
+      <div>
+        TestingBoK is a online community resource for cataloguing tools, techniques, processes
+        and useful articles related to modern software testing.
 
-      Once you have logged in, you can create a new article</a>
-      and later edit anyarticles you have created.
+        Once you have logged in, you can create a new article</a>
+        and later edit anyarticles you have created.
+      </div>
+      <div>
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            {% for message in messages %}
+              <br />
+              <em>{{message}}</em>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+      </div>
     </span>
       {% block body %}{% endblock %}
   </div>
