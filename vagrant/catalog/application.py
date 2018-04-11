@@ -16,7 +16,6 @@ import random
 import string
 import bleach
 from flaskext.markdown import Markdown
-import MarkdownParser
 
 auth = HTTPBasicAuth()
 engine = create_engine('sqlite:///catalog.db')
@@ -108,16 +107,26 @@ def edit_article(article_id):
     Allows the user to edit and save an article
     * The user must be logged in to view this page
     * If not logged in, they should be redirected to the login page
+    * The user should only be allowed to edit if they are the ownerself.
+        - If unauthorised, they should be redirected to add and article
     """
     if is_authenticated():
         article = session.query(Article).filter_by(id=article_id).first()
-        # Below may be wrong and why only one cat is brought back
         categories = session.query(Category).filter_by(id=article.parent_id)
 
         if request.method == 'GET':
-            return render_template('edit_article.html',
-                                   categories=categories,
-                                   article=article,)
+            # Check the user authored the article
+
+            if article.owner == login_session['username']:
+                return render_template('edit_article.html',
+                                       categories=categories,
+                                       article=article,)
+            else:
+                flash('You are not authorised to edit that article.')
+                flash('Please feel free to add a new one instead.')
+                return render_template('add_article.html',
+                                       categories=categories)
+
         elif request.method == 'POST':
             title = bleach.clean(request.form['title'])
             description = bleach.clean(request.form['my_article'])
@@ -139,6 +148,7 @@ def edit_article(article_id):
             record = History(viewer=username,
                              action='edited',
                              viewed_article=article_id)
+
             print('Adding record')
             session.add(record)
             session.commit()
@@ -172,6 +182,7 @@ def add_category():
     else:
         return redirect('/login')
 
+
 @app.route('/catalog/add_article', methods=['GET', 'POST'])
 def add_article():
     """
@@ -190,12 +201,12 @@ def add_article():
             title = bleach.clean(request.form['title'])
             description = bleach.clean(request.form['description'])
             category = bleach.clean(request.form['category'])
+            owner = login_session['username']
 
-            # TODO Update the owner once login functionality is complete
             new_article = Article(title=title,
                                   article_text=description,
                                   parent_id=category,
-                                  owner='admin')
+                                  owner=owner)
             session.add(new_article)
             session.commit()
             flash('New article succesfully created')
@@ -211,10 +222,15 @@ def delete_article(article_id):
     * The user must be logged in to view this page
     * If not logged in, they should be redirected to the login page
     """
+    article = session.query(Article).filter_by(id=article_id).first()
     if is_authenticated():
         if request.method == 'GET':
-            # Display the delete article page
-            return render_template('delete_article.html')
+            if article.owner == login_session['username']:
+                return render_template('delete_article.html')
+            else:
+                flash('You are not authorised to delete that article.')
+                return redirect('/', code=302)
+
         elif request.method == 'POST':
             # Delete the specified article
             delete_article = session.query(Article).filter_by(
@@ -228,7 +244,6 @@ def delete_article(article_id):
 
 
 @app.route('/catalog.json')
-@auth.login_required
 def catalog_json():
     """
     Return all of the catalog and articles in json form
@@ -237,31 +252,38 @@ def catalog_json():
     """
     all_categories = session.query(Category).all()
     all_articles = session.query(Article).all()
-    data = []
-    for cat in all_categories:
 
-        articles = []
-        for art in all_articles:
-            if cat.id == art.parent_id:
-                new_article = ["article_id", art.id,
-                               "title", art.title,
-                               "text", art.article_text,
-                               "owner", art.owner]
-                new_article = new_article
-                articles.append(new_article)
-        data.append([cat.category, articles])
-    return jsonify(dict(data))
+    if is_authenticated():
+        Categories = {"Category": []}
+        for c in all_categories:
+            current_category = [c.id, c.category, []]
+            for a in all_articles:
+                if a.parent_id == c.id:
+                    current_article = {"id": a.id,
+                                       "parent_id": a.parent_id,
+                                       "title": a.title,
+                                       "article_text": a.article_text,
+                                       "owner": a.owner}
+                    current_category[2].append(current_article)
+            Categories['Category'].append(current_category)
+        return jsonify(Categories)
+    else:
+        flash('Please login to see the catalog endpoint')
+        return redirect('/login', code=302)
 
 
 @app.route('/users.json')
-@auth.login_required
 def users_json():
     """Return all of the users in json form - should be logged in
     * The user must be logged in to view this page
     * If not logged in, they should be redirected to the login page
     """
-    users = session.query(User).all()
-    return jsonify(User=[i.serialize for i in users])
+    if is_authenticated():
+        users = session.query(User).all()
+        return jsonify(User=[i.serialize for i in users])
+    else:
+        flash('Please login to see the users endpoint')
+        return redirect('/login', code=302)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -400,7 +422,7 @@ def gconnect():
     if result['issued_to'] != CLIENT_ID:
         response = make_response(
             json.dumps("Token's client ID does not match app's."), 401)
-        print "Token's client ID does not match app's."
+        print("Token's client ID does not match app's.")
         response.headers['Content-Type'] = 'application/json'
         return response
 
@@ -434,9 +456,11 @@ def gconnect():
     output += '!</h1>'
     output += '<img src="'
     output += login_session['picture']
-    output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
+    output += """ " style = "width: 300px; height: 300px;border-radius: 150px;
+                  -webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
+              """
     flash("you are now logged in as %s" % login_session['username'])
-    print "done!"
+    print("done!")
     return output
 
 
@@ -480,8 +504,9 @@ def log_user_out():
 def format_text(text):
     """Returns the text in a format ready for markdown"""
 
-    tags = [["<strong>", "**"], ["</strong>", "**"], ["<em>", "_"], ["</em>", "_"],
-           ["<del>", "~~"], ["</del>", "~~"]]
+    tags = [["<strong>", "**"], ["</strong>", "**"],
+            ["<em>", "_"], ["</em>", "_"],
+            ["<del>", "~~"], ["</del>", "~~"]]
 
     formated_text = ""
 

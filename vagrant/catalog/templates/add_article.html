@@ -1,12 +1,23 @@
 {% extends "message.html" %}
 {% block body %}
   <div class="message">
-    Add Article
-      <form method="POST">
+    <!-- Message for users who edited an article with incorrect privalages -->
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        {% for message in messages %}
+          <br />
+          <em>{{message}}</em>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    Add Article <br /><br />
+      <form method="POST" id='article'>
         Title:<br />
         <input type="text" name="title" /><br />
         Description:<br />
-        <input type="text" name="description" /><br />
+        <textarea rows='10' cols='120' name="description" form='article' class="input_text_style">Enter your article here</textarea>
+        <br />
         Categegory:<br />
         <select name="category">
           {% for item in categories %}
