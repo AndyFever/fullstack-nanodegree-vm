@@ -6,11 +6,11 @@
       {% if messages %}
         {% for message in messages %}
           <br />
-          <em>{{message}}</em><br />
+          <em class="user_message">{{message}}</em><br />
         {% endfor %}
       {% endif %}
     {% endwith %}
-
+    <br />
     Add Article <br /><br />
       <form method="POST" id='article'>
         Title:<br />

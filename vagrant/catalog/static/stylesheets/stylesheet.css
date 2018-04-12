@@ -273,3 +273,7 @@ input[type=text] {
 .padding_left {
   padding-left: 30px;
 }
+
+.user_message {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}

@@ -89,7 +89,7 @@ def show_article(catalog_id, article_id):
 
     line_text = format_text(article.article_text)
     if status:
-        pre_txt = "Hi {}, please feel free to amend the article\n".format(
+        pre_txt = "Hi {}, if you wrote this article, please feel free to amend it!\n".format(
             username)
     else:
         pre_txt = "Please login to edit articles\n"
@@ -122,8 +122,7 @@ def edit_article(article_id):
                                        categories=categories,
                                        article=article,)
             else:
-                flash('You are not authorised to edit that article.')
-                flash('Please feel free to add a new one instead.')
+                flash('* You are not authorised to edit that article. Please feel free to add a new one instead.')
                 return render_template('add_article.html',
                                        categories=categories)
 
@@ -504,7 +503,7 @@ def gconnect():
     output += """ " style = "width: 300px; height: 300px;border-radius: 150px;
                   -webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
               """
-    flash("you are now logged in as %s" % login_session['username'])
+    flash("* You're now logged in as %s" % login_session['username'])
     print("done!")
     return output
 
