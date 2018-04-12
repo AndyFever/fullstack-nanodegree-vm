@@ -107,7 +107,7 @@ def edit_article(article_id):
     Allows the user to edit and save an article
     * The user must be logged in to view this page
     * If not logged in, they should be redirected to the login page
-    * The user should only be allowed to edit if they are the ownerself.
+    * The user should only be allowed to edit if they are the owner.
         - If unauthorised, they should be redirected to add and article
     """
     if is_authenticated():
@@ -230,7 +230,6 @@ def delete_article(article_id):
             else:
                 flash('You are not authorised to delete that article.')
                 return redirect('/', code=302)
-
         elif request.method == 'POST':
             # Delete the specified article
             delete_article = session.query(Article).filter_by(
@@ -269,6 +268,53 @@ def catalog_json():
         return jsonify(Categories)
     else:
         flash('Please login to see the catalog endpoint')
+        return redirect('/login', code=302)
+
+
+@app.route('/categories.json')
+def categories_json():
+    """
+    Returns a json object of the current catalog Categories
+    * The user must be logged in to see the catalog
+    * If not, they should be directed to the home page
+    """
+    if is_authenticated():
+        catalog = session.query(Category).all()
+        return jsonify(Category=[i.serialize for i in catalog])
+    else:
+        flash('Please login to see the catalog endpoint')
+        return redirect('/login', code=302)
+
+
+@app.route('/category/<int:category_id>/category_articles.json')
+def category_articles_json(category_id):
+    """
+    * User must me logged in.
+    * If not, they are returned to the login page
+      :param catalog_id: integer related to a specific article
+      :return: A list of articles for a category in the JSON format
+    """
+    if is_authenticated():
+        articles = session.query(Article).filter_by(parent_id=category_id)
+        return jsonify(Article=[i.serialize for i in articles])
+    else:
+        flash('Please login to see the articles endpoint')
+        return redirect('/login', code=302)
+
+
+@app.route('/article/<int:article_id>/article.json')
+def article_json(article_id):
+    """
+    * User must me logged in.
+    * If not, they are returned to the login page
+      :param article_id:
+      :return: A single article in the json format
+    """
+    if is_authenticated():
+        article = session.query(Article).filter_by(id=article_id)
+        return jsonify(Article=[i.serialize for i in article])
+    else:
+        flash('Please login to see the article endpoint')
         return redirect('/login', code=302)
 
 
@@ -328,7 +374,6 @@ def create_user():
         password = bleach.clean(request.form['password'])
         user = session.query(User).first()
         # The user exists, abort the action
-        # TODO Add an error page for the problematic user request
         if username != "" and password != "":
             add_user(username, password)
             flash('New user created')

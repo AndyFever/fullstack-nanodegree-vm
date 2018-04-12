@@ -6,7 +6,7 @@
       {% if messages %}
         {% for message in messages %}
           <br />
-          <em>{{message}}</em>
+          <em>{{message}}</em><br />
         {% endfor %}
       {% endif %}
     {% endwith %}
@@ -14,7 +14,7 @@
     Add Article <br /><br />
       <form method="POST" id='article'>
         Title:<br />
-        <input type="text" name="title" /><br />
+        <input type="text" name="title" class="input_text_style" /><br />
         Description:<br />
         <textarea rows='10' cols='120' name="description" form='article' class="input_text_style">Enter your article here</textarea>
         <br />
