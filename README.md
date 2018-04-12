@@ -20,6 +20,7 @@ Navigate to the cloned directory containing this fork of the code.  Then:
 
 ```
 sudo pip install Flask-Markdown
+cd /catalog
 python models.py
 python load_data.py
 python application.py
