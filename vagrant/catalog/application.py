@@ -89,12 +89,12 @@ def show_article(catalog_id, article_id):
 
     line_text = format_text(article.article_text)
     if status:
-        pre_txt = "Hi {}, if you wrote this article, please feel free to amend it!\n".format(
-            username)
+        txt = "Hi {}, this article is yours, please feel free to amend it!\n"\
+            .format(username)
     else:
-        pre_txt = "Please login to edit articles\n"
+        txt = "Please login to edit articles\n"
 
-    text = pre_txt + line_text
+    text = txt + line_text
     return render_template('article.html',
                            article=article,
                            text=text,
@@ -122,7 +122,10 @@ def edit_article(article_id):
                                        categories=categories,
                                        article=article,)
             else:
-                flash('* You are not authorised to edit that article. Please feel free to add a new one instead.')
+                flash("""
+                      * You are not authorised to edit that article.
+                      Please feel free to add a new one instead.
+                      """)
                 return render_template('add_article.html',
                                        categories=categories)
 
