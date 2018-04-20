@@ -16,6 +16,7 @@ import random
 import string
 import bleach
 from flaskext.markdown import Markdown
+from behave import given, when, then, step
 
 auth = HTTPBasicAuth()
 engine = create_engine('sqlite:///catalog.db')
@@ -154,7 +155,7 @@ def edit_article(article_id):
             print('Adding record')
             session.add(record)
             session.commit()
-            flash('Article has been succesfully edited')
+            flash('Article has been successfully edited')
             return redirect('/', code=302)
     else:
         return redirect('/login')
@@ -360,8 +361,7 @@ def login():
                 return redirect('/', code=302)
             else:
                 # User doesn't exist flash error message
-                print('User - {}, unsucceful login attempt'.format(
-                    user.username))
+                flash('Unsuccessful login attempt - please try again')
                 return redirect('/', code=302)
     elif request.method == 'GET':
         # Display the login page

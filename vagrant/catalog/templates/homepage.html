@@ -26,7 +26,7 @@
       {% for item in articles %}
         <div class="all_articles">
           <div class="article_title">
-            <a href='{{url_for('show_article', catalog_id = item.parent_id, article_id = item.id) }}'>{{ item.title }}</a>
+            <a id='article_list' href='{{url_for('show_article', catalog_id = item.parent_id, article_id = item.id) }}'>{{ item.title }}</a>
             {% for category in categories %}
               {% if category.id == item.parent_id %}
                 ({{ category.category }})

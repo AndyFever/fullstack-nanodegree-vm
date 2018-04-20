@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>TestingBOK</title>
+    <title>TestingBoK</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='stylesheets/stylesheet.css') }}" />
     <link href='https://fonts.googleapis.com/css?family=Alfa Slab One' rel='stylesheet'>
     <link href='https://fonts.googleapis.com/css?family=Amaranth' rel='stylesheet'>
@@ -22,13 +22,13 @@
             <!-- Leave blank  -->
         {% elif status == False: %}
           <!-- Link to create new user - TODO only show if not logged in -->
-            <a href='{{url_for('create_user') }}'>Create Account</a>
+            <a href='{{url_for('create_user') }}' id="create_user" >Create Account</a>
         {% endif %}
       </div>
       <div class="navbar_three header_text">
         {% if status == True: %}
             <!-- Logout button  -->
-             <a href="/logout" class="buttons" onclick="sign_out();">Logout</a>
+             <a href="/logout" class="buttons" id="logout" onclick="sign_out();">Logout</a>
         {% elif status == False: %}
           <!-- Link to create new user - TODO only show if not logged in -->
             <a href="{{url_for('login')}}" class="buttons">Login</a>
@@ -56,7 +56,7 @@
           {% if messages %}
             {% for message in messages %}
               <br />
-              <em class="user_message">{{message}}</em>
+              <em class="user_message" id="user_message">{{message}}</em>
             {% endfor %}
           {% endif %}
         {% endwith %}

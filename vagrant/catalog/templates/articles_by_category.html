@@ -19,7 +19,7 @@
     <span class="article">
       <p class="header_text">Articles in selected topic:</p>
           {% for item in articles %}
-              <a href='{{url_for('show_article', article_id = item.id, catalog_id = item.parent_id) }}'>{{ item.title }}</a>
+              <a id='sub_article' href='{{url_for('show_article', article_id = item.id, catalog_id = item.parent_id) }}'>{{ item.title }} </a>
           {% endfor %}
     </span>
     <div class="preview"></div>
