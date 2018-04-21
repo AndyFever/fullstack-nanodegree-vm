@@ -4,10 +4,10 @@ Feature: Creating a new user
 
   Scenario: Successfully creating a new user
     Given I am on the create new user page
-    When I enter the username "andy" and password "fever"
+    When I enter the username "python" and password "flask"
     Then I should see a message saying the user has been created
 
   Scenario: I should be able to log in with the newly created user
     Given I am on the login page
-    When I enter my username "andy" and password "fever"
+    When I enter my username "python" and password "flask"
     Then I should be logged in to TestingBoK

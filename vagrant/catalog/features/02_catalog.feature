@@ -45,14 +45,14 @@ Feature: The user should be able to browse the catalog for articles
     Then I should not be able to go to the add article page
 
   Scenario: The user if logged in should be able to add a new category
-    Given I am logged in as <"special_user">
+    Given I am logged in as the user Python
     And I can see the Add Category link
     When I add the category People
     Then I should see People listed on the homepage
     And The user logs out
 
   Scenario: The user should be able to edit an article if they are the owner
-    Given I am logged in as <"special_user">
+    Given I am logged in as the user Python
     And I have selected the category Process
     And I have selected the article Kanban Teams
     When I select edit article from the article page

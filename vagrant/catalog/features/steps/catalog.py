@@ -10,13 +10,13 @@ import re
 
 use_step_matcher("re")
 
-domain = "http://localhost:5000"
+domain = 'http://localhost:5000'
+
 @given("I am on the homepage")
 def step_impl(context):
     context.browser.get(domain)
     assert (context.browser.title == "TestingBoK")
-    time.sleep(2)
-
+    assert (context.browser.find_element(By.LINK_TEXT, 'Login'))
 
 
 @then("I should see the current list of categories")
@@ -96,15 +96,14 @@ def step_impl(context):
 
 @given("I am logged in and on the add article page")
 def step_impl(context):
-    # TODO setup a default user or a global login system
     context.browser.get(domain + '/login')
-    time.sleep(3)
-    context.browser.find_element(By.ID, 'username').send_keys('andy')
-    context.browser.find_element(By.ID, 'password').send_keys('fever')
+    # Ensure that the page is loaded
+    explicit_wait(context, 'ID', '___signin_0')
+    context.browser.find_element(By.ID, 'username').send_keys('python')
+    context.browser.find_element(By.ID, 'password').send_keys('flask')
     context.browser.find_element(By.ID, 'submit').click()
-    time.sleep(1)
+    explicit_wait(context, 'CLASS_NAME', 'heading')
     assert (context.browser.find_element(By.ID, 'logout').text == "Logout")
-
     context.browser.get(domain + '/catalog/add_article')
 
 
@@ -148,23 +147,42 @@ def step_impl(context):
 
 
 
+def explicit_wait(context, matcher, identifier):
+    if matcher == 'ID':
+        element = WebDriverWait(context.browser, 10).until(
+            EC.presence_of_element_located((By.ID, identifier)))
+    elif matcher == 'LINK_TEXT':
+        element = WebDriverWait(context.browser, 10).until(
+            EC.presence_of_element_located((By.LINK_TEXT, identifier)))
+    elif matcher == 'CLASS_NAME':
+        element = WebDriverWait(context.browser, 10).until(
+            EC.presence_of_element_located((By.CLASS_NAME, identifier)))
+
 @then("I should not be able to go to the add article page")
 def step_impl(context):
     context.browser.get(domain + '/catalog/add_article')
     # Check I have been redirected
-    time.sleep(3)
+    element = WebDriverWait(context.browser, 20).until(
+        EC.presence_of_element_located((By.ID, "___signin_0")))
     assert(context.browser.find_element(By.ID, 'google_login').text == 'Login with google')
 
 
-@given('I am logged in as <"special_user">')
-def step_impl(context):
+@given("I am logged in as the user (?P<user>.+)")
+def step_impl(context, user):
+
+    username = 'python'
+    password = 'flask'
+
     context.browser.get(domain + '/login')
-    time.sleep(3)
-    context.browser.find_element(By.ID, 'username').send_keys('andy')
-    context.browser.find_element(By.ID, 'password').send_keys('fever')
+    element = WebDriverWait(context.browser, 10).until(
+        EC.presence_of_element_located((By.ID, "___signin_0")))
+    context.browser.find_element(By.ID, 'username').send_keys(username)
+    context.browser.find_element(By.ID, 'password').send_keys(password)
     context.browser.find_element(By.ID, 'submit').click()
     time.sleep(1)
     assert (context.browser.find_element(By.ID, 'logout').text == "Logout")
+
+
 
 
 @step("I can see the Add Category link")
@@ -197,3 +215,11 @@ def step_impl(context):
 
     # Check the article title has been updated
     assert(context.browser.find_element(By.ID, 'user_message').text == 'Article has been successfully edited')
+
+
+@given("I am logged in as Python")
+def step_impl(context):
+    """
+    :type context: behave.runner.Context
+    """
+    pass
