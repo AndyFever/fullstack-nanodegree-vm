@@ -1,5 +1,7 @@
 Feature: Creating a new user
 
+  Note - the google login in not impelemented as it requires a full id
+
   Scenario: Successfully creating a new user
     Given I am on the create new user page
     When I enter the username "andy" and password "fever"

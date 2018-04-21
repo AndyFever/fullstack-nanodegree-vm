@@ -118,7 +118,7 @@ def edit_article(article_id):
         if request.method == 'GET':
             # Check the user authored the article
 
-            if article.owner == login_session['username']:
+            if article.owner_id == str(login_session['user_id']):
                 return render_template('edit_article.html',
                                        categories=categories,
                                        article=article,)
@@ -204,12 +204,13 @@ def add_article():
             title = bleach.clean(request.form['title'])
             description = bleach.clean(request.form['description'])
             category = bleach.clean(request.form['category'])
-            owner = login_session['username']
+            owner = login_session['user_id']
+            print("Owner: {}".format(owner))
 
             new_article = Article(title=title,
                                   article_text=description,
                                   parent_id=category,
-                                  owner=owner)
+                                  owner_id=owner)
             session.add(new_article)
             session.commit()
             flash('New article succesfully created')
@@ -228,7 +229,8 @@ def delete_article(article_id):
     article = session.query(Article).filter_by(id=article_id).first()
     if is_authenticated():
         if request.method == 'GET':
-            if article.owner == login_session['username']:
+            print("Article id: {}, User id: {}".format(article.owner_id, login_session['user_id']))
+            if article.owner_id == str(login_session['user_id']):
                 return render_template('delete_article.html')
             else:
                 flash('You are not authorised to delete that article.')
@@ -358,6 +360,7 @@ def login():
                     g.user = user
                     login_session['authenicated?'] = True
                     login_session['username'] = user.username
+                    login_session['user_id'] = user.id
                 return redirect('/', code=302)
             else:
                 # User doesn't exist flash error message
@@ -422,6 +425,17 @@ def add_user(username, password):
         user.hash_password(password)
         session.add(user)
         session.commit()
+        return True
+
+def add_google_user(username, usr_id, email, picture):
+    user = User(username=username, id=usr_id, email=email, picture=picture)
+    session.add(user)
+    try:
+        session.commit()
+    except:
+        session.rollback()
+
+
 
 
 @app.route('/gconnect', methods=['POST'])
@@ -483,7 +497,7 @@ def gconnect():
 
     # Store the access token in the session for later use.
     login_session['access_token'] = credentials.access_token
-    login_session['gplus_id'] = gplus_id
+    login_session['user_id'] = gplus_id
     login_session['authenicated?'] = True
 
     # Get user info
@@ -496,6 +510,9 @@ def gconnect():
     login_session['username'] = data['name']
     login_session['picture'] = data['picture']
     login_session['email'] = data['email']
+    print("session: {}".format(login_session['gplus_id']))
+
+    add_google_user(login_session['username'], login_session['user_id'], login_session['email'], login_session['picture'])
 
     output = ''
     output += '<h1>Welcome, '

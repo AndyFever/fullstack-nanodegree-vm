@@ -16,7 +16,7 @@ secret_key = ''.join(random.choice(string.ascii_uppercase + string.digits)
 class User(Base):
     __tablename__ = 'user'
     id = Column(Integer, primary_key=True)
-    username = Column(String(32), index=True)
+    username = Column(String(32), unique=True, index=True)
     picture = Column(String)
     email = Column(String)
     password_hash = Column(String(64))
@@ -74,7 +74,7 @@ class Article(Base):
     parent_id = Column(Integer, ForeignKey('categories.id'))
     title = Column(Text)
     article_text = Column(Text, nullable=False)
-    owner = Column(String, nullable=False)
+    owner_id = Column(String, nullable=False)
     category = relationship("Category")
 
     @property

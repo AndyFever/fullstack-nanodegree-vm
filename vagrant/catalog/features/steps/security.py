@@ -74,3 +74,4 @@ def step_impl(context):
     context.browser.find_element(By.ID, 'logout').click()
     # Click the logout button
     context.browser.find_element(By.ID, 'logout').click()
+
