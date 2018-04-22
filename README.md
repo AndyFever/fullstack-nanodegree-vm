@@ -26,6 +26,18 @@ python load_data.py
 python application.py
 ```
 
+4. The application includes some BDD tests. If you want to run them, do the following on you local machine (OSX):
+```
+pip install behave
+brew install selenium
+
+```
+
+You can then run the tests by running:
+```
+behave features
+```
+Note - If you want to re-run the tests, you will need to reset beforehand
 You should now have a working application.
 
 ## Useful Features

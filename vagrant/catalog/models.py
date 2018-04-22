@@ -3,15 +3,17 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, sessionmaker
 from sqlalchemy import create_engine
 from passlib.apps import custom_app_context as pwd_context
-from itsdangerous import(TimedJSONWebSignatureSerializer as Serializer,
- BadSignature, SignatureExpired)
-import random, string
+from itsdangerous import (TimedJSONWebSignatureSerializer as Serializer,
+                          BadSignature, SignatureExpired)
+import random
+import string
 
 Base = declarative_base()
 
 # Secret key used for token based authentication
 secret_key = ''.join(random.choice(string.ascii_uppercase + string.digits)
-    for x in range(32))
+                     for x in range(32))
+
 
 class User(Base):
     __tablename__ = 'user'
@@ -29,8 +31,8 @@ class User(Base):
         return pwd_context.verify(password, self.password_hash)
 
     def generate_auth_token(self, expiration=600):
-        s = Serializer(secret_key, expires_in = expiration)
-        return s.dumps({'id': self.id })
+        s = Serializer(secret_key, expires_in=expiration)
+        return s.dumps({'id': self.id})
 
     @staticmethod
     def verify_auth_token(token):
@@ -38,10 +40,10 @@ class User(Base):
         try:
             data = s.loads(token)
         except SignatureExpired:
-            #Valid Token, but expired
+            # Valid Token, but expired
             return None
         except BadSignature:
-            #Invalid Token
+            # Invalid Token
             return None
         user_id = data['id']
         print('user id: {}'.format(user_id))
@@ -50,10 +52,9 @@ class User(Base):
     @property
     def serialize(self):
         return {'id': self.id,
-        'username': self.username,
-        'picture': self.picture,
-        'email': self.email,
-        }
+                'username': self.username,
+                'picture': self.picture,
+                'email': self.email}
 
 
 class Category(Base):
@@ -64,8 +65,7 @@ class Category(Base):
     @property
     def serialize(self):
         return {'id': self.id,
-        'category': self.category,
-        }
+                'category': self.category}
 
 
 class Article(Base):
@@ -80,9 +80,8 @@ class Article(Base):
     @property
     def serialize(self):
         return {'id': self.id,
-        'title': self.title,
-        'article_text': self.article_text,
-        }
+                'title': self.title,
+                'article_text': self.article_text}
 
 
 class History(Base):

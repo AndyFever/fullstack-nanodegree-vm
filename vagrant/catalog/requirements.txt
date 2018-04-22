@@ -17,3 +17,5 @@ This is a list of the dependancies needed for this application
 * MarkupSafe==1.0
 * numpy==1.14.2
 * oauth2client==4.1.2
+* behave==1.2.6
+* selenium==3.11.0
