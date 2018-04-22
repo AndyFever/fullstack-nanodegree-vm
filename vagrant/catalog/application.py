@@ -1,3 +1,5 @@
+#!/usr/bin/env python2
+
 from models import Base, User, Article, Category, History
 from flask import Flask, jsonify, request, render_template, abort, redirect
 from flask import g, flash

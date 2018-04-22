@@ -1,3 +1,5 @@
+#!/usr/bin/env python2
+
 from behave import *
 import unittest
 from selenium.webdriver.common.by import By
