@@ -21,3 +21,9 @@ Feature: Creating a new user
     Given I am on the create new user page
     When I enter just a password
     Then I should get an error message saying "Please enter a valid username and password"
+
+    
+  Scenario: I should get an error message when I log in with a user who already exists
+    Given I am on the create new user page
+    When I enter my username "python" and password "flask"
+    Then I should get an error message saying "User already exists"
