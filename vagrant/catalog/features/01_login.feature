@@ -1,6 +1,7 @@
 Feature: Creating a new user
 
-  Note - the google login in not impelemented as it requires a full id
+  Note - the google login in not implemented as it requires a full
+  user id
 
   Scenario: Successfully creating a new user
     Given I am on the create new user page
