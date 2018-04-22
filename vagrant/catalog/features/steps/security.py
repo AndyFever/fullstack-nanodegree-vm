@@ -9,6 +9,7 @@ import time
 
 domain = "http://localhost:5000"
 
+
 @given("I am on the create new user page")
 def step_impl(context):
     context.browser.get(domain)
@@ -79,3 +80,26 @@ def explicit_wait(context, matcher, identifier):
     elif matcher == 'CLASS_NAME':
         element = WebDriverWait(context.browser, 10).until(
             EC.presence_of_element_located((By.CLASS_NAME, identifier)))
+
+
+@when("I enter just a username")
+def step_impl(context):
+    context.browser.find_element(By.ID,
+                                 'username').send_keys("just a username")
+    context.browser.find_element(By.ID,
+                                 'submit').click()
+
+
+@when("I enter just a password")
+def step_impl(context):
+    context.browser.find_element(By.ID,
+                                 'password').send_keys("just a password")
+    context.browser.find_element(By.ID,
+                                 'submit').click()
+
+
+@then('I should get an error message saying "{error_message}"')
+def step_impl(context, error_message):
+    explicit_wait(context, 'LINK_TEXT', 'Home')
+    assert (context.browser.find_element(By.ID,
+                                         'user_message').text == error_message)

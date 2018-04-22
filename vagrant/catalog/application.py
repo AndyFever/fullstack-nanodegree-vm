@@ -16,7 +16,6 @@ import random
 import string
 import bleach
 from flaskext.markdown import Markdown
-from behave import given, when, then, step
 
 auth = HTTPBasicAuth()
 engine = create_engine('sqlite:///catalog.db')
@@ -87,18 +86,10 @@ def show_article(catalog_id, article_id):
                          viewed_article=article_id)
         session.add(record)
         session.commit()
-
-    line_text = format_text(article.article_text)
-    if status:
-        txt = "Hi {}, this article is yours, please feel free to amend it!\n"\
-            .format(username)
-    else:
-        txt = "Please login to edit articles\n"
-
-    text = txt + line_text
+    line_text = "\n" + format_text(article.article_text)
     return render_template('article.html',
                            article=article,
-                           text=text,
+                           text=line_text,
                            status=status,)
 
 
@@ -229,7 +220,8 @@ def delete_article(article_id):
     article = session.query(Article).filter_by(id=article_id).first()
     if is_authenticated():
         if request.method == 'GET':
-            print("Article id: {}, User id: {}".format(article.owner_id, login_session['user_id']))
+            print("Article id: {}, User id: {}".format(
+                article.owner_id, login_session['user_id']))
             if article.owner_id == str(login_session['user_id']):
                 return render_template('delete_article.html')
             else:
@@ -377,11 +369,15 @@ def create_user():
     if request.method == "POST":
         username = bleach.clean(request.form['username'])
         password = bleach.clean(request.form['password'])
-        user = session.query(User).first()
-        # The user exists, abort the action
         if username != "" and password != "":
-            add_user(username, password)
-            flash('New user created')
+            user = session.query(User).filter_by(username=username).first()
+            if user is not None:
+                # The user exists, abort the action
+                flash("User already exists")
+                return redirect('/', code=302)
+            else:
+                add_user(username, password)
+                flash('New user created')
             return redirect('/', code=302)
         else:
             # Return error message
@@ -427,15 +423,11 @@ def add_user(username, password):
         session.commit()
         return True
 
+
 def add_google_user(username, usr_id, email, picture):
     user = User(username=username, id=usr_id, email=email, picture=picture)
     session.add(user)
-    try:
-        session.commit()
-    except:
-        session.rollback()
-
-
+    session.commit()
 
 
 @app.route('/gconnect', methods=['POST'])
@@ -512,7 +504,10 @@ def gconnect():
     login_session['email'] = data['email']
     print("session: {}".format(login_session['gplus_id']))
 
-    add_google_user(login_session['username'], login_session['user_id'], login_session['email'], login_session['picture'])
+    add_google_user(login_session['username'],
+                    login_session['user_id'],
+                    login_session['email'],
+                    login_session['picture'])
 
     output = ''
     output += '<h1>Welcome, '
