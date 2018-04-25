@@ -1,5 +1,4 @@
 #!/usr/bin/env python2
-
 from models import Base, User, Article, Category, History
 from flask import Flask, jsonify, request, render_template, abort, redirect
 from flask import g, flash
@@ -18,6 +17,8 @@ import random
 import string
 import bleach
 from flaskext.markdown import Markdown
+from functions.authentication import is_authenticated, log_user_out, add_user, add_google_user
+from functions.formater import format_text
 
 auth = HTTPBasicAuth()
 engine = create_engine('sqlite:///catalog.db')
@@ -413,25 +414,6 @@ def verify_password(username_or_token, password):
     return True
 
 
-def add_user(username, password):
-    """Allows the current user to create an account"""
-    # Check the user doesn't exist in the database
-    if session.query(User).filter_by(username=username).first():
-        return False
-    else:
-        user = User(username=username)
-        user.hash_password(password)
-        session.add(user)
-        session.commit()
-        return True
-
-
-def add_google_user(username, usr_id, email, picture):
-    user = User(username=username, id=usr_id, email=email, picture=picture)
-    session.add(user)
-    session.commit()
-
-
 @app.route('/gconnect', methods=['POST'])
 def gconnect():
     # Validate state token
@@ -538,51 +520,6 @@ def logout():
         log_user_out()
         status = is_authenticated()
         return redirect('/', code=302)
-
-
-def is_authenticated():
-    """Determines if a user is currently logged into the application"""
-    try:
-        if login_session['authenicated?']:
-            return True
-    except KeyError:
-        # Key doesn't exist yet
-        login_session['authenicated?'] = False
-        return False
-    else:
-        return False
-
-
-def log_user_out():
-    """Logs the current user out"""
-    login_session['authenicated?'] = False
-    login_session['username'] = None
-    login_session['gplus_id'] = None
-    g.user = None
-    flash('User has been successfully logged out')
-
-
-def format_text(text):
-    """Returns the text in a format ready for markdown"""
-
-    tags = [["<strong>", "**"], ["</strong>", "**"],
-            ["<em>", "_"], ["</em>", "_"],
-            ["<del>", "~~"], ["</del>", "~~"]]
-
-    formated_text = ""
-
-    # Replace all the formating tags with markdown
-    for tag in tags:
-        if tag[0] in text:
-            text = text.replace(tag[0], tag[1])
-
-    # Replace the styling tag with a new line
-    lines = text.split("<br>")
-
-    for line in lines:
-        line = line + "\n\n"
-        formated_text += line
-    return formated_text
 
 
 if __name__ == '__main__':
