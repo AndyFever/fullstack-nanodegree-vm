@@ -2,11 +2,11 @@ from flask import Blueprint
 from functions.authentication import is_authenticated
 from flask import session as login_session
 from functions.db import *
-# import application
 
-mod = Blueprint('mod', __name__)
 
-@mod.route('/catalog.json')
+api = Blueprint('api', __name__)
+
+@api.route('/catalog.json')
 def catalog_json():
     """
     Return all of the catalog and articles in json form
@@ -35,7 +35,7 @@ def catalog_json():
         return redirect('/login', code=302)
 
 
-@mod.route('/categories.json')
+@api.route('/categories.json')
 def categories_json():
     """
     Returns a json object of the current catalog Categories
@@ -50,7 +50,7 @@ def categories_json():
         return redirect('/login', code=302)
 
 
-@mod.route('/category/<int:category_id>/category_articles.json')
+@api.route('/category/<int:category_id>/category_articles.json')
 def category_articles_json(category_id):
     """
     * User must me logged in.
@@ -63,4 +63,34 @@ def category_articles_json(category_id):
         return jsonify(Article=[i.serialize for i in articles])
     else:
         flash('Please login to see the articles endpoint')
+        return redirect('/login', code=302)
+
+
+@api.route('/article/<int:article_id>/article.json')
+def article_json(article_id):
+    """
+    * User must me logged in.
+    * If not, they are returned to the login page
+      :param article_id:
+      :return: A single article in the json format
+    """
+    if is_authenticated():
+        article = session.query(Article).filter_by(id=article_id)
+        return jsonify(Article=[i.serialize for i in article])
+    else:
+        flash('Please login to see the article endpoint')
+        return redirect('/login', code=302)
+
+
+@api.route('/users.json')
+def users_json():
+    """Return all of the users in json form - should be logged in
+    * The user must be logged in to view this page
+    * If not logged in, they should be redirected to the login page
+    """
+    if is_authenticated():
+        users = session.query(User).all()
+        return jsonify(User=[i.serialize for i in users])
+    else:
+        flash('Please login to see the users endpoint')
         return redirect('/login', code=302)

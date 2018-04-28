@@ -5,7 +5,7 @@
         <p class="header_text">Categories</p>
           {% for item in categories %}
             <div class="catalog_title">
-              <a id='categorys' href='{{url_for('show_articles_by_category',
+              <a id='categorys' href='{{url_for('article.show_articles_by_category',
               catalog_id = item.id) }}'>{{ item.category }}</a>
             </div>
           {% endfor %}
@@ -13,7 +13,7 @@
       {% if status == True %}
       <!-- User is logged in, show the add catalog category link-->
       <div class="header_text align_bottom_right">
-          <a href="{{url_for('add_category')}}">Add Category</a>
+          <a href="{{url_for('catalog.add_category')}}">Add Category</a>
         </div>
       {% elif status == False %}
         <!-- Don't display a link -->
@@ -26,7 +26,7 @@
       {% for item in articles %}
         <div class="all_articles">
           <div class="article_title">
-            <a id='article_list' href='{{url_for('show_article', catalog_id = item.parent_id, article_id = item.id) }}'>{{ item.title }}</a>
+            <a id='article_list' href='{{url_for('article.show_article', catalog_id = item.parent_id, article_id = item.id) }}'>{{ item.title }}</a>
             {% for category in categories %}
               {% if category.id == item.parent_id %}
                 ({{ category.category }})
@@ -39,7 +39,7 @@
       {% if status == True %}
         <!-- User logged in - show add article link -->
         <div class="header_text align_right">
-          <a href="{{url_for('add_article')}}">Add Article</a>
+          <a href="{{url_for('article.add_article')}}">Add Article</a>
         </div>
       {% elif status == False %}
         <!-- Don't display a link -->
