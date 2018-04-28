@@ -3,6 +3,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, sessionmaker
 from sqlalchemy import create_engine
 from flask import session as login_session
+from functions.db import *
 
 def is_authenticated():
     """Determines if a user is currently logged into the application"""
@@ -34,7 +35,7 @@ def add_google_user(username, usr_id, email, picture):
     user = User(username=username, id=usr_id, email=email, picture=picture)
     session.add(user)
     session.commit()
-    
+
 
 def log_user_out():
     """Logs the current user out"""
