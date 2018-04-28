@@ -7,6 +7,7 @@ import bleach
 
 art = Blueprint('article', __name__)
 
+
 @art.route('/catalog/<int:catalog_id>/items')
 def show_articles_by_category(catalog_id):
     """
@@ -22,6 +23,7 @@ def show_articles_by_category(catalog_id):
                            categories=categories,
                            articles=articles,
                            status=status,)
+
 
 @art.route('/catalog/<int:catalog_id>/<int:article_id>')
 def show_article(catalog_id, article_id):

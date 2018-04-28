@@ -17,9 +17,16 @@ import random
 import string
 import bleach
 from flaskext.markdown import Markdown
-from functions.authentication import is_authenticated, log_user_out, add_user, add_google_user
+from functions.authentication import is_authenticated, log_user_out
+from functions.authentication import add_google_user, add_user
 from functions.formater import format_text
 from functions.db import *
+
+from flask_models.articles.routes import art
+from flask_models.api.routes import api
+from flask_models.catalog.routes import catalog
+from flask_models.homepage.routes import mod
+
 auth = HTTPBasicAuth()
 
 app = Flask(__name__)
@@ -28,11 +35,6 @@ Markdown(app)
 CLIENT_ID = json.loads(
     open('client_secrets.json', 'r').read())['web']['client_id']
 APPLICATION_NAME = 'Product Catalog'
-
-from flask_models.articles.routes import art
-from flask_models.api.routes import api
-from flask_models.catalog.routes import catalog
-from flask_models.homepage.routes import mod
 
 
 app.register_blueprint(art)

@@ -6,6 +6,7 @@ import bleach
 
 catalog = Blueprint('catalog', __name__)
 
+
 @catalog.route('/category/add_category', methods=['GET', 'POST'])
 def add_category():
     """

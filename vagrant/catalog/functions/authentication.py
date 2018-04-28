@@ -5,6 +5,7 @@ from sqlalchemy import create_engine
 from flask import session as login_session
 from functions.db import *
 
+
 def is_authenticated():
     """Determines if a user is currently logged into the application"""
     try:

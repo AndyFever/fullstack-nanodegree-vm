@@ -5,6 +5,7 @@ from functions.db import *
 
 mod = Blueprint('home', __name__)
 
+
 @mod.route('/')
 def show_homepage():
     """

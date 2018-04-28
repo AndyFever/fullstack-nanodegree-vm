@@ -3,8 +3,8 @@ from functions.authentication import is_authenticated
 from flask import session as login_session
 from functions.db import *
 
-
 api = Blueprint('api', __name__)
+
 
 @api.route('/catalog.json')
 def catalog_json():
