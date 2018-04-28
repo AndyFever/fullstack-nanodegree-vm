@@ -35,7 +35,6 @@ from flask_models.catalog.routes import catalog
 from flask_models.homepage.routes import mod
 
 
-
 app.register_blueprint(art)
 app.register_blueprint(mod)
 app.register_blueprint(catalog)
