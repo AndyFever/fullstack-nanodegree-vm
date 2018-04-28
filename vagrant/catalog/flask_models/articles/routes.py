@@ -4,6 +4,19 @@ from functions.formater import format_text
 from flask import session as login_session
 from functions.db import *
 import bleach
+import logging
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+
+formatter = logging.Formatter('%(asctime)s:%(levelno)s:%(message)s')
+
+file_handler = logging.FileHandler('article.log')
+file_handler.setLevel(logging.INFO)
+file_handler.setFormatter(formatter)
+
+logger.addHandler(file_handler)
+
 
 art = Blueprint('article', __name__)
 
@@ -39,6 +52,7 @@ def show_article(catalog_id, article_id):
                          viewed_article=article_id)
         session.add(record)
         session.commit()
+        logger.info('Successfully updated history')
     line_text = "\n" + format_text(article.article_text)
     return render_template('article.html',
                            article=article,
@@ -96,9 +110,9 @@ def edit_article(article_id):
                              action='edited',
                              viewed_article=article_id)
 
-            print('Adding record')
             session.add(record)
             session.commit()
+            logger.info('Article: {} was successfully editied by {}'.format(title, username))
             flash('Article has been successfully edited')
             return redirect('/', code=302)
     else:
@@ -124,7 +138,6 @@ def add_article():
             description = bleach.clean(request.form['description'])
             category = bleach.clean(request.form['category'])
             owner = login_session['user_id']
-            print("Owner: {}".format(owner))
 
             new_article = Article(title=title,
                                   article_text=description,
@@ -132,6 +145,7 @@ def add_article():
                                   owner_id=owner)
             session.add(new_article)
             session.commit()
+            logger.info('Article: {} was succesfully created'.format(title))
             flash('New article succesfully created')
             return redirect('/', code=302)
     else:
@@ -154,6 +168,7 @@ def delete_article(article_id):
                 return render_template('delete_article.html')
             else:
                 flash('You are not authorised to delete that article.')
+                logger.warning('{} tried unsuccessfully to delete article'.format(login_session['user_id']))
                 return redirect('/', code=302)
         elif request.method == 'POST':
             # Delete the specified article
@@ -162,6 +177,7 @@ def delete_article(article_id):
             session.delete(delete_article)
             session.commit()
             flash('Article has been succsefully deleted')
+            logger.info('Article: {} was succesfully deleted'.format(article.title))
             return redirect('/', code=302)
     else:
         return redirect('/login')

@@ -12,20 +12,19 @@ from oauth2client.client import FlowExchangeError
 import httplib2
 import json
 from flask import make_response
-import requests
-import random
-import string
-import bleach
 from flaskext.markdown import Markdown
 from functions.authentication import is_authenticated, log_user_out
 from functions.authentication import add_google_user, add_user
 from functions.formater import format_text
 from functions.db import *
-
 from flask_models.articles.routes import art
 from flask_models.api.routes import api
 from flask_models.catalog.routes import catalog
 from flask_models.homepage.routes import mod
+import requests
+import random
+import string
+import bleach
 
 auth = HTTPBasicAuth()
 
@@ -35,7 +34,6 @@ Markdown(app)
 CLIENT_ID = json.loads(
     open('client_secrets.json', 'r').read())['web']['client_id']
 APPLICATION_NAME = 'Product Catalog'
-
 
 app.register_blueprint(art)
 app.register_blueprint(mod)
@@ -227,7 +225,6 @@ def logout():
 
     elif request.method == 'POST':
         # Log the current user out
-        print('Loging the user out')
         log_user_out()
         status = is_authenticated()
         return redirect('/', code=302)

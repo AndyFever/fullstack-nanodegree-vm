@@ -3,6 +3,18 @@ from functions.authentication import is_authenticated
 from flask import session as login_session
 from functions.db import *
 import bleach
+import logging
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+
+formatter = logging.Formatter('%(asctime)s:%(levelno)s:%(message)s')
+
+file_handler = logging.FileHandler('catalog.log')
+file_handler.setLevel(logging.INFO)
+file_handler.setFormatter(formatter)
+
+logger.addHandler(file_handler)
 
 catalog = Blueprint('catalog', __name__)
 
@@ -26,6 +38,7 @@ def add_category():
             session.add(new_category)
             session.commit()
             flash('New category created')
+            logging.info('Category {} was succesfully created'.format(category))
             return redirect('/', code=302)
 
     else:
